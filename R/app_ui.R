@@ -26,6 +26,15 @@ app_ui <- function() {
         class = "omicstudio-topright",
         shiny::actionLink("switch_omics", i18n("← Omics", "← 切换组学"),
                           class = "omicstudio-switch"),
+        bslib::popover(
+          shiny::actionLink("export_menu", i18n("⤓ Export", "⤓ 导出"),
+                            class = "omicstudio-switch"),
+          title = i18n("Export current data", "导出当前数据"),
+          shiny::downloadButton("dl_rds",   i18n("Object (.rds)", "对象 (.rds)"), class = "btn-sm w-100 mb-1"),
+          shiny::downloadButton("dl_meta",  i18n("Cell metadata (.csv)", "细胞元数据 (.csv)"), class = "btn-sm w-100 mb-1"),
+          shiny::downloadButton("dl_matrix",i18n("Counts matrix (.rds)", "表达矩阵 (.rds)"), class = "btn-sm w-100 mb-1"),
+          shiny::downloadButton("dl_embed", i18n("Embeddings (.csv)", "降维坐标 (.csv)"), class = "btn-sm w-100")
+        ),
         shiny::div(class = "omicstudio-pydot", id = "py-status",
                    i18n("Python: not set up", "Python：未配置")),
         shiny::tags$div(

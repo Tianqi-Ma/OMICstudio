@@ -15,6 +15,9 @@ app_server <- function(input, output, session) {
   )
   log_rv <- shiny::reactiveVal(list())
 
+  # --- Shared "export current data" (available on every step) ----------------
+  register_exports(input, output, session, rv)
+
   # --- Omics routing ---------------------------------------------------------
   shiny::observeEvent(input$omics, { rv$omics <- input$omics })
   shiny::observeEvent(input$switch_omics, { rv$omics <- NULL })
