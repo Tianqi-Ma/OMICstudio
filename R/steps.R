@@ -1,0 +1,182 @@
+#' Per-omics pipeline step registries
+#'
+#' Single source of truth for each omics type's ordered steps (value key, phase,
+#' bilingual label, and the module UI function). The navigator and the hidden
+#' tabset are both built from these. Single-cell is fully implemented; the other
+#' omics show their planned steps via a placeholder module until implemented.
+#'
+#' @name steps
+#' @keywords internal
+NULL
+
+#' Steps for the currently selected omics
+#' @param omics One of "sc","wes","bulk","spatial","integration".
+#' @keywords internal
+steps_for <- function(omics) {
+  switch(omics,
+         sc          = steps_sc(),
+         wes         = steps_wes(),
+         bulk        = steps_bulk(),
+         spatial     = steps_spatial(),
+         integration = steps_integration(),
+         list())
+}
+
+#' Single-cell steps (scop engine) — fully implemented
+#' @keywords internal
+steps_sc <- function() {
+  list(
+    list(v = "import",    n = 1,  phase = "sc_data",   en = "Import",        zh = "导入",       ui = mod_import_ui),
+    list(v = "qc",        n = 2,  phase = "sc_data",   en = "Quality control", zh = "质控",     ui = mod_qc_ui),
+    list(v = "doublet",   n = 3,  phase = "sc_data",   en = "Doublets",      zh = "去双细胞", ui = mod_doublet_ui),
+    list(v = "normalize", n = 4,  phase = "sc_prep",   en = "Normalize",     zh = "归一化", ui = mod_normalize_ui),
+    list(v = "reduce",    n = 5,  phase = "sc_prep",   en = "Features / PCA",zh = "特征/PCA",   ui = mod_reduce_ui),
+    list(v = "integrate", n = 6,  phase = "sc_prep",   en = "Integrate",     zh = "整合",       ui = mod_integrate_ui),
+    list(v = "cluster",   n = 7,  phase = "sc_struct", en = "Cluster",       zh = "聚类",       ui = mod_cluster_ui),
+    list(v = "embed",     n = 8,  phase = "sc_struct", en = "Embed",         zh = "降维图", ui = mod_embed_ui),
+    list(v = "markers",   n = 9,  phase = "sc_id",     en = "Markers",       zh = "标志基因", ui = mod_markers_ui),
+    list(v = "annotate",  n = 10, phase = "sc_id",     en = "Annotate",      zh = "注释",       ui = mod_annotate_ui),
+    list(v = "enrichment",n = 11, phase = "sc_id",     en = "Enrichment/GSEA", zh = "富集/GSEA", ui = mod_enrichment_ui),
+    list(v = "trajectory",n = 12, phase = "sc_traj",   en = "Trajectory",    zh = "轨迹",       ui = mod_trajectory_ui),
+    list(v = "velocity",  n = 13, phase = "sc_traj",   en = "RNA velocity",  zh = "RNA 速率",   ui = mod_velocity_ui),
+    list(v = "dynamic",   n = 14, phase = "sc_traj",   en = "Dynamic features", zh = "动态特征", ui = mod_dynamic_ui),
+    list(v = "cellcycle", n = 15, phase = "sc_adv",    en = "Cell cycle & signatures", zh = "周期与信号", ui = mod_cellcycle_signatures_ui),
+    list(v = "cellcomm",  n = 16, phase = "sc_adv",    en = "Cell communication", zh = "细胞通讯", ui = mod_cellcomm_ui),
+    list(v = "malignancy",n = 17, phase = "sc_adv",    en = "Malignant / CNV", zh = "恶性/CNV", ui = mod_malignancy_ui),
+    list(v = "viz",       n = 18, phase = "sc_out",    en = "Visualize",     zh = "可视化", ui = mod_viz_ui),
+    list(v = "report",    n = 19, phase = "sc_out",    en = "Report",        zh = "报告",       ui = mod_report_ui),
+    list(v = "export",    n = 20, phase = "sc_out",    en = "Export",        zh = "导出",       ui = mod_export_ui)
+  )
+}
+
+# Helper to build a placeholder ("coming soon") step.
+.ph <- function(v, n, phase, en, zh) {
+  list(v = v, n = n, phase = phase, en = en, zh = zh, ui = mod_placeholder_ui)
+}
+
+#' WES (maftools) steps — planned (placeholder)
+#' @keywords internal
+steps_wes <- function() {
+  list(
+    .ph("wes_import",  1, "wes_io",   "Import MAF",        "导入 MAF"),
+    .ph("wes_summary", 2, "wes_io",   "Summary",           "概览"),
+    .ph("wes_onco",    3, "wes_land", "Oncoplot",          "Oncoplot"),
+    .ph("wes_titv",    4, "wes_land", "TiTv / VAF / rainfall", "TiTv/VAF/rainfall"),
+    .ph("wes_tmb",     5, "wes_land", "TMB",               "突变负荷 TMB"),
+    .ph("wes_lolli",   6, "wes_land", "Lollipop / domains","Lollipop/结构域"),
+    .ph("wes_driver",  7, "wes_land", "Drivers & interactions", "驱动基因与互作"),
+    .ph("wes_sig",     8, "wes_sig",  "Mutational signatures", "突变特征"),
+    .ph("wes_clin",    9, "wes_prog", "Clinical / pathway / drug", "临床/通路/药物"),
+    .ph("wes_compare",10, "wes_prog", "Cohort comparison", "队列比较"),
+    .ph("wes_surv",   11, "wes_prog", "Mutation vs survival", "突变-预后"),
+    .ph("wes_hetero", 12, "wes_prog", "Heterogeneity",     "异质性")
+  )
+}
+
+#' Bulk RNA-seq (TOmicsVis + backends) steps — planned (placeholder)
+#' @keywords internal
+steps_bulk <- function() {
+  list(
+    .ph("bulk_import", 1, "bulk_io",  "Import & groups",   "导入与分组"),
+    .ph("bulk_qc",     2, "bulk_io",  "QC / overview",     "QC/概览"),
+    .ph("bulk_de",     3, "bulk_de",  "Differential expression", "差异表达"),
+    .ph("bulk_degviz", 4, "bulk_de",  "DEG plots",         "差异基因图"),
+    .ph("bulk_sets",   5, "bulk_de",  "Set operations",    "集合运算"),
+    .ph("bulk_trend",  6, "bulk_sub", "Trend clustering",  "趋势聚类"),
+    .ph("bulk_subtype",7, "bulk_sub", "Molecular subtyping", "分子分型"),
+    .ph("bulk_prog",   8, "bulk_sub", "Prognosis (subtype vs OS)", "预后(亚型-OS)"),
+    .ph("bulk_enrich", 9, "bulk_enr", "Enrichment / GSEA", "富集/GSEA"),
+    .ph("bulk_wgcna", 10, "bulk_enr", "WGCNA",             "WGCNA")
+  )
+}
+
+#' Spatial (Seurat + SpatialExperiment) steps — planned (placeholder)
+#' @keywords internal
+steps_spatial <- function() {
+  list(
+    .ph("sp_import",   1, "sp_io",     "Import (Visium/Xenium/...)", "导入(Visium/Xenium)"),
+    .ph("sp_qc",       2, "sp_io",     "QC",                "质控"),
+    .ph("sp_norm",     3, "sp_struct", "Normalize / cluster", "归一化/聚类"),
+    .ph("sp_view",     4, "sp_spatial","Spatial visualization", "空间可视化"),
+    .ph("sp_svg",      5, "sp_spatial","Spatially variable genes", "空间可变基因"),
+    .ph("sp_domain",   6, "sp_spatial","Spatial domains",   "空间域"),
+    .ph("sp_deconv",   7, "sp_integ",  "Deconvolution",     "去卷积"),
+    .ph("sp_ref",      8, "sp_integ",  "scRNA reference mapping", "scRNA 参考映射"),
+    .ph("sp_ccc",      9, "sp_integ",  "Spatial cell communication", "空间细胞通讯")
+  )
+}
+
+#' Multi-omics integration steps — planned (placeholder)
+#' @keywords internal
+steps_integration <- function() {
+  list(
+    .ph("int_import",  1, "int_io",    "Import & align omics", "导入与对齐"),
+    .ph("int_prep",    2, "int_io",    "Preprocess / feature select", "预处理/特征选择"),
+    .ph("int_cluster", 3, "int_integ", "Integrative subtyping (MOFA2/iCluster/SNF)", "整合分型"),
+    .ph("int_prog",    4, "int_prog",  "Prognostic stratification", "预后分层"),
+    .ph("int_assoc",   5, "int_prog",  "Cross-omics association", "跨组学关联"),
+    .ph("int_report",  6, "int_prog",  "Report",            "报告")
+  )
+}
+
+#' Phase labels (en/zh) covering every phase key used above
+#' @keywords internal
+app_phases <- function() {
+  list(
+    # single-cell
+    sc_data = list(en = "Data & QC", zh = "数据与质控"),
+    sc_prep = list(en = "Preprocess", zh = "预处理"),
+    sc_struct = list(en = "Structure", zh = "结构"),
+    sc_id = list(en = "Identity", zh = "身份"),
+    sc_traj = list(en = "Trajectory", zh = "轨迹与动态"),
+    sc_adv = list(en = "Advanced", zh = "高级"),
+    sc_out = list(en = "Output", zh = "产出"),
+    # WES
+    wes_io = list(en = "Input", zh = "输入"),
+    wes_land = list(en = "Landscape", zh = "突变全景"),
+    wes_sig = list(en = "Signatures", zh = "突变特征"),
+    wes_prog = list(en = "Clinical & prognosis", zh = "临床与预后"),
+    # bulk
+    bulk_io = list(en = "Input & QC", zh = "输入与质控"),
+    bulk_de = list(en = "Differential expression", zh = "差异表达"),
+    bulk_sub = list(en = "Subtyping & prognosis", zh = "分型与预后"),
+    bulk_enr = list(en = "Enrichment & networks", zh = "富集与网络"),
+    # spatial
+    sp_io = list(en = "Input & QC", zh = "输入与质控"),
+    sp_struct = list(en = "Structure", zh = "结构"),
+    sp_spatial = list(en = "Spatial analysis", zh = "空间分析"),
+    sp_integ = list(en = "Deconvolution & integration", zh = "去卷积与整合"),
+    # integration
+    int_io = list(en = "Input", zh = "输入"),
+    int_integ = list(en = "Integration", zh = "整合"),
+    int_prog = list(en = "Prognosis & output", zh = "预后与产出")
+  )
+}
+
+#' Ordered phase keys for one omics (first-appearance order in its steps)
+#' @keywords internal
+phase_order_for <- function(omics) {
+  unique(vapply(steps_for(omics), function(s) s$phase, character(1)))
+}
+
+#' The omics catalogue for the landing page
+#' @keywords internal
+omics_catalogue <- function() {
+  list(
+    list(v = "sc",          icon = "circle-nodes", en = "Single-cell RNA-seq", zh = "单细胞 RNA-seq",
+         desc_en = "QC, clustering, annotation, trajectory, velocity, GRN (scop engine).",
+         desc_zh = "质控、聚类、注释、轨迹、速率、调控网络（scop 引擎）。", anim = "sc"),
+    list(v = "bulk",        icon = "chart-column", en = "Bulk RNA-seq", zh = "Bulk RNA-seq",
+         desc_en = "DE, subtyping, enrichment, WGCNA, prognosis (TOmicsVis).",
+         desc_zh = "差异表达、分子分型、富集、WGCNA、预后（TOmicsVis）。", anim = "bulk"),
+    list(v = "wes",         icon = "dna", en = "WES / somatic mutations", zh = "WES / 体细胞突变",
+         desc_en = "Oncoplot, TMB, signatures, drivers, mutation-survival (maftools).",
+         desc_zh = "Oncoplot、TMB、突变特征、驱动基因、突变-预后（maftools）。", anim = "wes"),
+    list(v = "spatial",     icon = "border-all", en = "Spatial transcriptomics", zh = "空间转录组",
+         desc_en = "Tissue-overlay viz, spatial domains, SVGs, deconvolution (Seurat).",
+         desc_zh = "组织叠加图、空间域、空间可变基因、去卷积（Seurat）。", anim = "spatial"),
+    list(v = "integration", icon = "layer-group", en = "Multi-omics integration", zh = "多组学整合",
+         desc_en = "Integrative subtyping & prognostic stratification (MOFA2/iCluster/SNF).",
+         desc_zh = "整合分型与预后分层（MOFA2/iCluster/SNF）。", anim = "integration")
+  )
+}
