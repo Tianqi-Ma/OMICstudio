@@ -2,32 +2,50 @@
 
 > 🌐 **Languages:** **English** · [中文版 README](README.zh-CN.md)
 
-**Interactive single-cell RNA-seq analysis on your own machine.** Launch a browser
-interface with one command, upload a count matrix, and interactively run a modern
-scRNA-seq pipeline — QC, doublet removal, normalization, dimensionality reduction,
-integration, clustering, embedding, marker detection, and cell-type annotation —
-using your own computer's CPU and RAM. No cloud server required.
+**Interactive multi-omics analysis on your own machine.** Launch a browser
+interface with one command, pick the kind of data you have, and work through
+that pipeline step by step — using your own computer's CPU and RAM. No cloud
+server, nothing uploaded anywhere.
 
 Every step is designed for beginners *and* experts:
 
 - 💡 a plain-language **"What is this step?"** explainer (with a worked example)
 - 🔧 a **method choice** (each step offers alternatives — e.g. UMAP *or* t-SNE)
 - 🎚️ **adjustable thresholds** with sensible defaults
-- 📊 a **result summary** and an **interactive preview plot** with **hover details**
-- 🧾 a **reproducibility log** you can export as an R script
+- 📊 a **result summary** and a large **preview plot**
+- 🧾 a **reproducibility log** you can export as an R script or a narrated report
+- 🌗 dark / light themes, English / 中文 — switchable from the top bar
 
-> **Status:** early scaffold (v0.1). The UI, module structure, and analysis
-> wrappers are in place. It has **not yet been run end-to-end against a live
-> Seurat/Bioconductor install** — see [Caveats](#caveats).
+> **Status (v0.4.0):** the **single-cell RNA-seq** pipeline is complete — 21
+> steps, all wired and statically validated. The other four omics show their
+> planned steps in the interface and are not implemented yet. Nothing has been
+> run end-to-end against a live Seurat/scop install; see [Caveats](#caveats).
+
+---
+
+## The five pipelines
+
+Choosing a card on the start screen routes you into that pipeline.
+
+| Omics | Engine | Status |
+|---|---|---|
+| **Single-cell RNA-seq** | [scop](https://github.com/mengxu98/scop) + Seurat | ✅ complete (21 steps) |
+| **Bulk RNA-seq** | TOmicsVis + DESeq2 | 🚧 roadmap shown in-app |
+| **WES / somatic mutations** | maftools | 🚧 roadmap shown in-app |
+| **Spatial transcriptomics** | Seurat + SpatialExperiment | 🚧 roadmap shown in-app |
+| **Multi-omics integration** | MOFA2 / iClusterPlus / SNFtool | 🚧 roadmap shown in-app |
+
+Clinical follow-up is **shared across pipelines**: load a cohort once in the
+*Clinical & survival* step and every pipeline that needs outcome data reuses it.
 
 ---
 
 ## Why "localhost-first"?
 
-Real scRNA-seq analysis (Seurat/Bioconductor) needs native compute and real RAM.
-Browser-only (WASM) apps can't run it. So OMICstudio runs a **local server + browser
-UI**: the interface is a web page, but all computation happens on *your* machine.
-This is the same model as `cellxgene launch`.
+Real omics analysis (Seurat/Bioconductor) needs native compute and real RAM.
+Browser-only (WASM) apps can't run it. So OMICstudio runs a **local server +
+browser UI**: the interface is a web page, but all computation happens on *your*
+machine. This is the same model as `cellxgene launch`.
 
 ---
 
@@ -41,20 +59,20 @@ Pick the tier that matches how much you want to install.
 remotes::install_github("Tianqi-Ma/OMICstudio")
 OMICstudio::run_app()   # opens your browser automatically
 ```
-Requires R plus the heavy analysis packages (Seurat, Bioconductor). Smallest
-download, one command.
+Needs R ≥ 4.1 with **shiny ≥ 1.7.4** and **bslib ≥ 0.7.0** (shiny ≥ 1.8.1 is
+recommended), plus the heavy analysis packages for the steps you actually run.
+Smallest download, one command.
 
 ### B. No R, no dependencies → Docker (recommended for most users)
-Everything (R + Seurat + Bioconductor + the app) is baked into one image. You only
-need [Docker](https://www.docker.com/products/docker-desktop/).
+Everything (R + Seurat + Bioconductor + scop + the app) is baked into one image.
+You only need [Docker](https://www.docker.com/products/docker-desktop/).
 ```bash
-docker run --rm -p 3838:3838 -m 16g tianqima/omicstudio
+docker build -t omicstudio .           # build once from this repo
+docker run --rm -p 3838:3838 -m 16g omicstudio
 # then open http://localhost:3838 in your browser
 ```
 Upload your data through the browser (no volume mounting needed). Give Docker
 enough memory (`-m 16g`, and raise Docker Desktop's memory limit for large data).
-
-> Build the image yourself from this repo: `docker build -t omicstudio .`
 
 ### C. Non-technical, double-click (planned)
 A desktop installer (Tauri/Electron/electricShine) that bundles R and the app so
@@ -65,9 +83,15 @@ users just double-click — no terminal, no Docker. Planned for a later release.
 ## Try it instantly (no data needed)
 
 On the **Import** step, keep the source on **Demo data** and click *Load demo
-data*. A tiny bundled example loads immediately (offline). You can also pick a
-real public dataset (10x PBMC 1k/5k, downloaded on first use) or paste a URL to
-any `.rds` / `.h5` file.
+data*. Three demos are offered:
+
+| Demo | What it is | Needs |
+|---|---|---|
+| **PBMC 3k** (default) | the classic 2,700-cell 10x PBMC dataset, **bundled in the package** | nothing — instant, offline |
+| **Pancreas** | mouse pancreas with lineage structure and spliced/unspliced layers, for trajectory / velocity | `scop` installed |
+| **Tiny example** | 500 × 300 synthetic matrix for a quick UI check | nothing |
+
+You can also paste a URL to any `.rds` / `.h5` file.
 
 ## What you can upload
 
@@ -75,45 +99,69 @@ any `.rds` / `.h5` file.
   are updated automatically)
 - **10x `.h5`** — Cell Ranger HDF5
 - **Counts table** — CSV/TSV, genes in rows, cells in columns
+- **Clinical table** — CSV/TSV, one row per patient (id, follow-up time, outcome)
 
 Browser uploads are capped high (5 GB by default; change with
 `run_app(max_upload_mb = ...)`).
 
 ---
 
-## The analysis steps
+## The single-cell steps
 
-| # | Step | Methods offered | You control |
-|---|------|-----------------|-------------|
-| 1 | Import | RDS / 10x .h5 / table | format |
-| 2 | QC | **MAD (adaptive)** / manual | MAD multiplier or fixed cutoffs, species |
-| 3 | Doublet removal | **scDblFinder** / DoubletFinder | flag vs remove, score cutoff |
-| 4 | Normalization | **LogNormalize** / SCTransform | scale factor |
-| 5 | Features + PCA | HVG **vst** / mvp / dispersion | #HVGs, #PCs |
-| 6 | Integration *(optional)* | **none** / Harmony / CCA / RPCA | batch column |
-| 7 | Clustering | **Leiden** / Louvain | resolution(s), dims |
-| 8 | Embedding | **UMAP** / t-SNE / PaCMAP | neighbors, min_dist / perplexity |
-| 9 | Markers | **wilcox** / roc / MAST | logFC, min.pct, top-N |
-| 10 | Annotation | **manual** / SingleR / Azimuth | reference, per-cluster labels |
-| 11 | Visualize | UMAP / violin / dotplot / feature / heatmap | genes, grouping |
-| 12 | Export | .rds / .h5ad (best-effort) / figures / R script | — |
+Seven phases, twenty-one steps. Bold = the default method.
 
-Methods and defaults follow current (2023–2025) best practice (MAD-based QC,
-scDblFinder, Leiden, Harmony, pseudobulk DE in a later release, etc.).
+| Phase | # | Step | Methods offered |
+|---|---|------|-----------------|
+| **Data & QC** | 1 | Import | RDS / 10x .h5 / table / URL / demo |
+| | 2 | Quality control | **MAD (adaptive)** / manual; mito, ribo, hemoglobin, dissociation % |
+| | 3 | Doublets | **scDblFinder** / DoubletFinder |
+| **Preprocess** | 4 | Normalize | **LogNormalize** / SCTransform |
+| | 5 | Features / PCA | HVG **vst** / mvp / dispersion |
+| | 6 | Integrate | **none** / Harmony / CCA / RPCA / scVI / scanorama / BBKNN |
+| **Structure** | 7 | Cluster | **Leiden** / Louvain |
+| | 8 | Embed | **UMAP** / t-SNE / PaCMAP / PHATE |
+| **Identity** | 9 | Markers | **wilcox** / roc / MAST |
+| | 10 | Annotate | **manual** / SingleR / Azimuth / scop KNN prediction |
+| | 11 | Enrichment / GSEA | ORA + GSEA (clusterProfiler via scop) |
+| **Trajectory** | 12 | Trajectory | **Slingshot** / Monocle2 / Monocle3 / PAGA / Palantir |
+| | 13 | RNA velocity | scVelo (steady-state / stochastic / dynamical) |
+| | 14 | Dynamic features | scop dynamic features + heatmap |
+| **Advanced** | 15 | Cell cycle & signatures | Seurat cell cycle, UCell / AddModuleScore |
+| | 16 | Cell communication | LIANA / CellChat |
+| | 17 | Malignant / CNV | CopyKAT, stemness |
+| | 18 | **Clinical & survival** | Kaplan-Meier + log-rank + univariable Cox; stratify by a clinical column or by per-sample cell-type composition (median / tertile / optimal cutpoint) |
+| **Output** | 19 | Visualize | UMAP / violin / dotplot / feature / heatmap |
+| | 20 | Report | narrated HTML report from the reproducibility log |
+| | 21 | Export | .rds / .h5ad (best-effort) / figures / R script |
+
+A **⤓ Export** menu in the top bar is available on *every* step (object,
+metadata, counts, embeddings) so you never have to reach the last step to get
+your data out.
+
+Methods and defaults follow current (2023–2025) best practice: MAD-based QC,
+scDblFinder, Leiden, Harmony, scop/SCP plotting throughout.
 
 ---
 
 ## Caveats
 
-- **Not yet validated end-to-end.** Built and parse-checked, but not run against a
-  live Seurat/Bioconductor install with real data. Treat v0.1 as a working
-  scaffold; expect to fix rough edges on first real run.
+- **Not yet validated end-to-end.** Every file parses, every step's UI builds,
+  every module's outputs evaluate, and the package installs — but the pipeline
+  has **not been run against a live Seurat/scop install with real data**. A few
+  scop argument names still need checking on first real run.
+- **`scop` is the plotting and compute engine** for the single-cell pipeline and
+  is a GitHub package; if your machine blocks source builds, use the Docker
+  image, which bakes in scop and a pre-built conda environment for the
+  Python-backed steps (scVelo, PAGA, Palantir).
 - **Heavy packages are optional at install time** (they live in `Suggests`). The
   UI loads without them; each compute step checks for what it needs and tells you
-  what to install if it's missing. The Docker image bakes them all in.
+  what to install if it's missing.
 - **Some steps need internet** the first time (SingleR/Azimuth reference download).
 - **`.h5ad` export** in pure R relies on SeuratDisk (best-effort); `.rds` is the
   primary export format.
+- **The "optimal" survival cutpoint is exploratory.** It is chosen to maximise
+  separation, so its p-value is optimistic — report the median split, or validate
+  the cutpoint in an independent cohort.
 - **Memory** scales with cell count. <100k cells is comfortable on 16–32 GB;
   larger needs more. The app warns you and offers downsampling.
 
@@ -121,12 +169,35 @@ scDblFinder, Leiden, Harmony, pseudobulk DE in a later release, etc.).
 
 ## Development
 
-R package layout (golem-style): `R/app_ui.R`, `R/app_server.R`, `R/run_app.R`,
-one `R/mod_*.R` per step, compute wrappers in `R/fct_compute.R`, shared helpers in
-`R/utils_*.R` and `R/fct_*.R`. Run locally during development with:
+R package layout (golem-style):
+
+```
+R/app_ui.R            top-level shell (top bar, sidebar, splash)
+R/app_landing.R       omics chooser
+R/app_server.R        omics routing + shared hub (rv$obj, rv$clinical, rv$status)
+R/steps.R             per-omics step registries — the single source of truth
+R/mod_*.R             one module per step
+R/fct_compute.R       scop/Seurat compute wrappers
+R/fct_plots.R         scop plotting wrappers + shared theme/palette
+R/fct_survival.R      omics-agnostic survival maths (survival + ggplot2)
+R/utils_ui.R          the shared step layout, bilingual helpers
+```
+
+Run locally during development with:
 ```r
 pkgload::load_all(); run_app()
 ```
+
+Before committing, the checks that must pass:
+```r
+testthat::test_dir("tests/testthat")   # includes a guard that every module's
+                                       # outputs evaluate, and that no function
+                                       # calls a name that does not exist
+```
+
+The single-cell pipeline is also maintained standalone as
+[scStudio](https://github.com/Tianqi-Ma/scStudio); shared changes are mirrored
+between the two repositories.
 
 ## License
 

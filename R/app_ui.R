@@ -8,11 +8,19 @@
 #' @return A [bslib::page_sidebar()] UI wrapped with the splash overlay.
 #' @keywords internal
 app_ui <- function() {
+  # Inter from Google Fonts, but this app is meant to work offline: if the font
+  # cannot be resolved, fall back to the system UI stack instead of failing.
+  ui_font <- tryCatch(
+    bslib::font_google("Inter", local = FALSE),
+    error = function(e) bslib::font_collection(
+      "Inter", "system-ui", "-apple-system", "Segoe UI", "Roboto",
+      "Helvetica Neue", "Arial", "sans-serif"))
+
   theme <- bslib::bs_theme(
     version = 5, preset = "shiny",
     primary = "#2f81c7",
-    base_font = bslib::font_google("Inter", local = FALSE),
-    heading_font = bslib::font_google("Inter", local = FALSE)
+    base_font = ui_font,
+    heading_font = ui_font
   )
 
   page <- bslib::page_sidebar(

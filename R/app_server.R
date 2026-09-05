@@ -99,6 +99,7 @@ app_server <- function(input, output, session) {
   mod_cellcycle_signatures_server("cellcycle", rv, log_rv)
   mod_cellcomm_server("cellcomm", rv, log_rv)
   mod_malignancy_server("malignancy", rv, log_rv)
+  mod_clinical_server("clinical", rv, log_rv)
   mod_viz_server("viz", rv, log_rv)
   mod_report_server("report", rv, log_rv)
   mod_export_server("export", rv, log_rv)

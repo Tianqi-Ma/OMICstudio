@@ -41,11 +41,13 @@ counts_preview <- function(obj, n_genes = 50, n_cells = 100) {
 #' Pre-QC overview figure: QC violins + top expressed genes + count scatter
 #'
 #' @param obj A Seurat object.
-#' @param species "human"/"mouse" for mito/ribo gene patterns.
+#' @param species "human"/"mouse" for mito/ribo gene patterns. Defaults to
+#'   auto-detection from gene-name casing (this view has no species control, and
+#'   guessing wrong makes the mitochondrial panel read a flat 0%).
 #' @return A patchwork/ggplot object (falls back to a single ggplot if patchwork
 #'   is unavailable).
 #' @keywords internal
-overview_plots <- function(obj, species = "human") {
+overview_plots <- function(obj, species = guess_species(obj)) {
   # compute QC metrics for display only (no filtering, not written back)
   o <- tryCatch(qc_add_metrics(obj, species = species), error = function(e) obj)
   md <- obj_meta(o)
@@ -63,7 +65,7 @@ overview_plots <- function(obj, species = "human") {
     ggplot2::facet_wrap(~metric, scales = "free", nrow = 1) +
     ggplot2::scale_fill_manual(values = sc_palette(length(metrics)), guide = "none") +
     ggplot2::labs(x = NULL, y = NULL, title = "Per-cell QC metrics (pre-filter)") +
-    scstudio_theme() +
+    omicstudio_theme() +
     ggplot2::theme(axis.text.x = ggplot2::element_blank())
 
   # --- 2. Top-20 highly expressed genes (fraction of total counts) ---
@@ -79,7 +81,7 @@ overview_plots <- function(obj, species = "human") {
       ggplot2::geom_col(fill = sc_palette(1)) +
       ggplot2::coord_flip() +
       ggplot2::labs(x = NULL, y = "% of total counts", title = "Top expressed genes") +
-      scstudio_theme()
+      omicstudio_theme()
   }
 
   # --- 3. nCount vs nFeature scatter ---
@@ -90,12 +92,14 @@ overview_plots <- function(obj, species = "human") {
       ggplot2::scale_x_log10() +
       ggplot2::labs(x = "UMIs / cell (log10)", y = "Genes / cell",
                     title = "Counts vs genes") +
-      scstudio_theme()
+      omicstudio_theme()
   }
 
   plots <- Filter(Negate(is.null), list(p_vln, p_top, p_sc))
+  if (!length(plots)) stop("Nothing to plot: no QC metrics or counts available.")
   if (has_pkg("patchwork") && length(plots) > 1) {
-    Reduce(`+`, plots) + patchwork::plot_layout(ncol = 1, heights = c(1, 1, 1))
+    Reduce(`+`, plots) +
+      patchwork::plot_layout(ncol = 1, heights = rep(1, length(plots)))
   } else {
     plots[[1]]
   }

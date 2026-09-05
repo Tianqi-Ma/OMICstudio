@@ -136,6 +136,19 @@ body { background: var(--sc-bg); color: var(--sc-text); }
   padding: 2rem; text-align: center; color: var(--sc-muted);
   background: var(--sc-panel); border: 1px dashed var(--sc-border); border-radius: .5rem;
 }
+/* "nothing here yet" line in the sidebar (no data / no omics chosen) */
+.omicstudio-status-empty {
+  padding: .55rem .1rem; font-size: .8rem; color: var(--sc-muted); font-style: italic;
+}
+/* compact wrapper for the sidebar's dataset readout */
+.omicstudio-mini { font-size: .82rem; line-height: 1.35; }
+/* which step a "coming soon" card belongs to */
+.omicstudio-placeholder-step {
+  display: inline-block; margin-bottom: .6rem; padding: .15rem .5rem;
+  font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--sc-accent2); border: 1px solid var(--sc-border);
+  border-radius: 1rem; background: var(--sc-card);
+}
 
 /* ---- startup splash ---- */
 #omicstudio-splash {

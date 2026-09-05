@@ -1,5 +1,5 @@
 # OMICstudio — dependency-free distribution.
-# Everything (R + Seurat + Bioconductor + the app) is baked into this image, so a
+# Everything (R + Seurat + Bioconductor + scop + the app) is baked into this image, so a
 # user only needs Docker. Build once, then anyone can run:
 #
 #   docker run --rm -p 3838:3838 -m 16g <image>
@@ -12,7 +12,7 @@
 FROM bioconductor/bioconductor_docker:RELEASE_3_18
 
 LABEL org.opencontainers.image.title="OMICstudio" \
-      org.opencontainers.image.description="Local interactive single-cell RNA-seq analysis app" \
+      org.opencontainers.image.description="Local interactive multi-omics analysis app (single-cell complete; bulk/WES/spatial/integration planned)" \
       org.opencontainers.image.source="https://github.com/Tianqi-Ma/OMICstudio"
 
 # System libs occasionally needed by leiden/igraph/plotly stacks are already in
@@ -20,7 +20,7 @@ LABEL org.opencontainers.image.title="OMICstudio" \
 RUN R -e "install.packages(c( \
       'shiny','bslib','ggplot2','Matrix','plotly','DT','shinyWidgets', \
       'promises','future','progressr','remotes','Seurat','SeuratObject', \
-      'harmony','clustree','ggrastr','scattermore'), \
+      'harmony','clustree','ggrastr','scattermore','survival','patchwork'), \
       repos='https://cloud.r-project.org')"
 
 RUN R -e "BiocManager::install(c( \

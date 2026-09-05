@@ -43,9 +43,10 @@ steps_sc <- function() {
     list(v = "cellcycle", n = 15, phase = "sc_adv",    en = "Cell cycle & signatures", zh = "周期与信号", ui = mod_cellcycle_signatures_ui),
     list(v = "cellcomm",  n = 16, phase = "sc_adv",    en = "Cell communication", zh = "细胞通讯", ui = mod_cellcomm_ui),
     list(v = "malignancy",n = 17, phase = "sc_adv",    en = "Malignant / CNV", zh = "恶性/CNV", ui = mod_malignancy_ui),
-    list(v = "viz",       n = 18, phase = "sc_out",    en = "Visualize",     zh = "可视化", ui = mod_viz_ui),
-    list(v = "report",    n = 19, phase = "sc_out",    en = "Report",        zh = "报告",       ui = mod_report_ui),
-    list(v = "export",    n = 20, phase = "sc_out",    en = "Export",        zh = "导出",       ui = mod_export_ui)
+    list(v = "clinical",  n = 18, phase = "sc_adv",    en = "Clinical & survival", zh = "临床与生存", ui = mod_clinical_ui),
+    list(v = "viz",       n = 19, phase = "sc_out",    en = "Visualize",     zh = "可视化", ui = mod_viz_ui),
+    list(v = "report",    n = 20, phase = "sc_out",    en = "Report",        zh = "报告",       ui = mod_report_ui),
+    list(v = "export",    n = 21, phase = "sc_out",    en = "Export",        zh = "导出",       ui = mod_export_ui)
   )
 }
 
@@ -153,6 +154,23 @@ app_phases <- function() {
   )
 }
 
+#' Bilingual label of a step, looked up by its key across every registry
+#'
+#' Lets a shared module (e.g. the "coming soon" placeholder) name the step it is
+#' standing in for, rather than showing the same anonymous card 37 times.
+#'
+#' @param v A step key such as "wes_onco".
+#' @return list(en=, zh=); the key itself if it is not in any registry.
+#' @keywords internal
+step_label <- function(v) {
+  for (om in c("sc", "wes", "bulk", "spatial", "integration")) {
+    for (s in steps_for(om)) {
+      if (identical(s$v, v)) return(list(en = s$en, zh = s$zh))
+    }
+  }
+  list(en = v, zh = v)
+}
+
 #' Ordered phase keys for one omics (first-appearance order in its steps)
 #' @keywords internal
 phase_order_for <- function(omics) {
@@ -164,8 +182,8 @@ phase_order_for <- function(omics) {
 omics_catalogue <- function() {
   list(
     list(v = "sc",          icon = "circle-nodes", en = "Single-cell RNA-seq", zh = "单细胞 RNA-seq",
-         desc_en = "QC, clustering, annotation, trajectory, velocity, GRN (scop engine).",
-         desc_zh = "质控、聚类、注释、轨迹、速率、调控网络（scop 引擎）。", anim = "sc"),
+         desc_en = "QC, clustering, annotation, trajectory, velocity, survival (scop engine).",
+         desc_zh = "质控、聚类、注释、轨迹、速率、生存分析（scop 引擎）。", anim = "sc"),
     list(v = "bulk",        icon = "chart-column", en = "Bulk RNA-seq", zh = "Bulk RNA-seq",
          desc_en = "DE, subtyping, enrichment, WGCNA, prognosis (TOmicsVis).",
          desc_zh = "差异表达、分子分型、富集、WGCNA、预后（TOmicsVis）。", anim = "bulk"),
