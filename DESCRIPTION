@@ -1,22 +1,26 @@
 Package: OMICstudio
 Title: Interactive Local Multi-Omics Analysis Studio
-Version: 0.4.0
+Version: 0.5.0
 Authors@R:
     person("OMICstudio", "Authors", email = "noreply@example.com", role = c("aut", "cre"))
 Description: A localhost-first, browser-based interactive application for
     multi-omics analysis. Users launch the app with a single command, pick an
     omics type, and work through that pipeline step by step -- entirely on their
     own machine, with no cloud server. The single-cell RNA-seq pipeline is
-    complete: twenty steps from import and quality control through doublet
+    complete: twenty-one steps from import and quality control through doublet
     removal, normalization, dimensionality reduction, batch integration,
     clustering, embedding, markers, annotation, enrichment, trajectory, RNA
     velocity, cell-cycle and signature scoring, cell-cell communication, CNV /
     malignancy inference, survival analysis, visualization, a narrated report
-    and export. Bulk RNA-seq, whole-exome sequencing, spatial transcriptomics
-    and multi-omics integration are on the roadmap and show their planned steps
-    in the interface. Every step offers method alternatives, adjustable
-    thresholds, a beginner-friendly explanation, a result summary, a large
-    preview plot, and reproducible parameter logging.
+    and export. The whole-exome / somatic mutation pipeline is complete too:
+    twelve steps over maftools, from MAF import through the cohort summary,
+    oncoplot, mutation spectra, tumour mutational burden, lollipop plots,
+    driver detection, mutational signatures, clinical and pathway enrichment,
+    cohort comparison, mutation-survival and heterogeneity. Bulk RNA-seq,
+    spatial transcriptomics and multi-omics integration are on the roadmap and
+    show their planned steps in the interface. Every step offers method
+    alternatives, adjustable thresholds, a beginner-friendly explanation, a
+    result summary, a large preview plot, and reproducible parameter logging.
 License: MIT + file LICENSE
 Depends:
     R (>= 4.1.0)
@@ -37,6 +41,9 @@ Imports:
     tools
 Suggests:
     scop,
+    maftools,
+    NMF,
+    BSgenome.Hsapiens.UCSC.hg19,
     SeuratObject,
     Seurat,
     SeuratData,

@@ -18,7 +18,8 @@ You launch it with one command; it opens in your browser and runs all computatio
 on your own machine.
 
 Five pipelines are offered on the start screen. The **single-cell RNA-seq**
-pipeline is complete (21 steps). Bulk RNA-seq, WES, spatial transcriptomics and
+(21 steps) and **WES / somatic mutation** (12 steps) pipelines are complete;
+their cards are badged *Available*. Bulk RNA-seq, spatial transcriptomics and
 multi-omics integration show their planned steps and are not implemented yet.
 
 ## Launch it
@@ -88,8 +89,45 @@ Two things to know:
 - The **optimal** cutpoint is chosen to maximise separation, so its p-value is
   optimistic. Report the median split, or validate the cutpoint elsewhere.
 
-The cohort is stored on the shared hub, so the other omics pipelines will reuse
-it once they are implemented.
+The cohort is stored on the shared hub, so the WES pipeline picks it up too —
+see below.
+
+## The WES pipeline
+
+Click the **WES / somatic mutations** card instead, and step 1 offers maftools'
+bundled **TCGA LAML** cohort — 193 samples, instant and offline — so you can walk
+the whole pipeline without data of your own.
+
+```{r}
+# what the app is doing under the hood
+maf <- maftools::read.maf(
+  system.file("extdata", "tcga_laml.maf.gz", package = "maftools"),
+  clinicalData = read.delim(
+    system.file("extdata", "tcga_laml_annot.tsv", package = "maftools")))
+```
+
+From there: the cohort summary, the oncoplot (annotate it by
+`FAB_classification`), the mutation spectrum, TMB, a lollipop plot for any gene,
+driver detection, signatures, clinical enrichment, a two-group comparison,
+mutation-vs-survival and per-sample heterogeneity.
+
+maftools installs as an ordinary Bioconductor binary, so unlike the single-cell
+engine it needs no source build:
+
+```{r}
+BiocManager::install("maftools")
+```
+
+Only the signature step needs more: a `BSgenome` package for the reference build
+and `NMF`. If your installed maftools has drifted from what the modules call,
+`OMICstudio:::wes_missing_api()` lists exactly what is missing.
+
+## Sharing one cohort between pipelines
+
+`rv$clinical` is shared. Load a cohort in the single-cell **Clinical & survival**
+step and the WES **Mutation vs survival** step offers it as a source — same
+Kaplan-Meier code, same log-rank test, no second upload. The reverse works too:
+the WES step writes the joined cohort back.
 
 ## Installing the heavy dependencies
 

@@ -1,3 +1,50 @@
+# OMICstudio 0.5.0
+
+The WES / somatic mutation pipeline. Two of the five pipelines are now complete.
+
+## Added
+- **Twelve WES steps over maftools**, wired into the omics router the same way
+  single-cell is: Import MAF, Cohort summary, Oncoplot, TiTv/VAF/rainfall, TMB,
+  Lollipop/domains, Drivers & interactions, Mutational signatures,
+  Clinical/pathway/drug, Cohort comparison, Mutation vs survival, Heterogeneity.
+  `R/fct_wes.R` holds the wrappers; each module keeps the same shape as the
+  single-cell ones (explainer, method choice, thresholds, run, summary, preview).
+- **Instant offline WES demo**: maftools ships the TCGA LAML cohort (193
+  samples), so the whole pipeline is explorable with no data of your own —
+  the counterpart to the bundled pbmc3k.
+- **The survival layer pays off across omics.** *Mutation vs survival* does not
+  reimplement anything: it turns a MAF into per-sample mutation status and hands
+  that to `fct_survival.R`. A cohort loaded in the single-cell *Clinical &
+  survival* step is picked up automatically, so the curves, the log-rank test and
+  the Cox screen are identical on both sides.
+- **Per-omics object slots.** `rv$obj` (Seurat) and `rv$maf` (MAF) are separate,
+  and the sidebar reports whichever pipeline is active. Previously, switching
+  from single-cell to another omics left the sidebar showing the Seurat object's
+  cell and gene counts.
+- **Landing-page availability badges**, so which pipelines actually run is
+  visible before clicking into one.
+- `render_base_plot()` for maftools' base-graphics output, with the same
+  readable-error-on-canvas behaviour as the ggplot renderer.
+- `wes_missing_api()`: checks an installed maftools against every entry point
+  the modules call, so version drift is one command to diagnose.
+
+## Notes
+- maftools is a plain Bioconductor binary — no source build — so this pipeline
+  runs on machines where the single-cell engine (scop, a GitHub package) cannot
+  be installed.
+- Mutational signatures additionally need a BSgenome package and `NMF`; every
+  other WES step works without them.
+- `maftools::pathways()` was `OncogenicPathways()` before 2.12; the wrapper
+  handles both.
+
+## Known limitations
+- The WES pipeline is statically validated (parse, UI build, output evaluation,
+  tests, install) but has **not been run against a live maftools install with
+  real data**; some argument names may still need adjusting.
+- Bulk, spatial and integration remain roadmap only.
+
+---
+
 # OMICstudio 0.4.0
 
 Multi-omics suite. OMICstudio grew out of

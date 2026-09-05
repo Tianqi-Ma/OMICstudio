@@ -87,6 +87,24 @@ sc_module_servers <- function() {
   )
 }
 
+# The WES modules, paired with their step key.
+wes_module_servers <- function() {
+  list(
+    wes_import  = mod_wes_import_server,
+    wes_summary = mod_wes_summary_server,
+    wes_onco    = mod_wes_onco_server,
+    wes_titv    = mod_wes_titv_server,
+    wes_tmb     = mod_wes_tmb_server,
+    wes_lolli   = mod_wes_lolli_server,
+    wes_driver  = mod_wes_driver_server,
+    wes_sig     = mod_wes_sig_server,
+    wes_clin    = mod_wes_clin_server,
+    wes_compare = mod_wes_compare_server,
+    wes_surv    = mod_wes_surv_server,
+    wes_hetero  = mod_wes_hetero_server
+  )
+}
+
 test_that("every step's UI builds, for every omics", {
   for (omics in c("sc", "wes", "bulk", "spatial", "integration")) {
     for (s in steps_for(omics)) {
@@ -100,6 +118,38 @@ test_that("every step's UI builds, for every omics", {
 test_that("the single-cell registry and the wired servers agree", {
   keys <- vapply(steps_sc(), function(s) s$v, character(1))
   expect_setequal(keys, names(sc_module_servers()))
+})
+
+test_that("the WES registry and the wired servers agree", {
+  keys <- vapply(steps_wes(), function(s) s$v, character(1))
+  expect_setequal(keys, names(wes_module_servers()))
+  # and none of them is still the placeholder
+  for (s in steps_wes()) {
+    expect_false(identical(s$ui, mod_placeholder_ui), info = s$v)
+  }
+})
+
+test_that("only the implemented omics are advertised as available", {
+  ready <- vapply(omics_catalogue(), function(o) isTRUE(o$ready), logical(1))
+  keys  <- vapply(omics_catalogue(), function(o) o$v, character(1))
+  expect_setequal(keys[ready], c("sc", "wes"))
+  # every "planned" omics really is still all placeholders
+  for (om in keys[!ready]) {
+    for (s in steps_for(om)) {
+      expect_true(identical(s$ui, mod_placeholder_ui), info = paste(om, s$v))
+    }
+  }
+})
+
+test_that("every WES module's outputs evaluate with no MAF loaded", {
+  bad <- character(0)
+  for (id in names(wes_module_servers())) {
+    rv <- shiny::reactiveValues(omics = "wes", maf = NULL, obj = NULL,
+                                status = list(), clinical = NULL)
+    bad <- c(bad, force_outputs(wes_module_servers()[[id]], id, rv,
+                                shiny::reactiveVal(list())))
+  }
+  expect_equal(bad, character(0))
 })
 
 test_that("every module's outputs evaluate with no data loaded", {

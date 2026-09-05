@@ -24,7 +24,8 @@ NULL
   trajectory    = list(en = "Trajectory",        zh = "拟时序",     kw = c("trajector", "pseudotime", "dynamic")),
   enrichment    = list(en = "Enrichment / GSEA", zh = "富集 / GSEA", kw = c("enrich", "gsea")),
   malignancy    = list(en = "Malignant / CNV",   zh = "恶性 / CNV", kw = c("cnv", "malignant", "stemness")),
-  survival      = list(en = "Clinical & survival", zh = "临床与生存", kw = c("clinical", "surviv"))
+  survival      = list(en = "Clinical & survival", zh = "临床与生存", kw = c("clinical", "surviv")),
+  wes           = list(en = "Somatic mutations",  zh = "体细胞突变", kw = c("wes", "maf", "oncoplot", "tmb"))
 )
 
 #' @rdname mod_report

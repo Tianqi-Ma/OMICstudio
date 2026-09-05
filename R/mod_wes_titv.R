@@ -1,0 +1,157 @@
+#' WES module 4: TiTv, VAF and rainfall
+#'
+#' Three views of the mutation spectrum rather than the gene list: the
+#' transition/transversion balance across the cohort, the allele-frequency
+#' distribution per gene, and the genomic distribution of one sample's variants.
+#'
+#' @param id Module id. @param rv shared hub. @param log_rv repro log.
+#' @name mod_wes_titv
+NULL
+
+#' @rdname mod_wes_titv
+#' @keywords internal
+mod_wes_titv_ui <- function(id) {
+  ns <- shiny::NS(id)
+  explainer <- explainer_card(
+    title = list(en = "TiTv / VAF / rainfall", zh = "TiTv / VAF / rainfall"),
+    what = list(
+      en = "<b>TiTv</b>: the balance of transitions (A↔G, C↔T) versus
+            transversions. <b>VAF</b>: what fraction of reads carried the variant,
+            per gene. <b>Rainfall</b>: each variant plotted along the genome
+            against the distance to the previous one.",
+      zh = "<b>TiTv</b>：转换（A↔G、C↔T）与颠换的比例。<b>VAF</b>：每个基因的变异等位基因频率分布。<b>Rainfall</b>：把每个变异按其在基因组上的位置、以及与前一个变异的距离画出来。"),
+    why  = list(
+      en = "The TiTv spectrum is a fingerprint of the underlying mutational
+            process. VAF separates clonal (~50% in a pure diploid tumour) from
+            subclonal variants. Rainfall reveals <i>kataegis</i> — localised
+            hypermutation showing up as a tight cluster low on the plot.",
+      zh = "TiTv 谱是潜在突变过程的指纹。VAF 能区分克隆性变异（纯二倍体肿瘤中约 50%）与亚克隆变异。Rainfall 可揭示 <i>kataegis</i>——局部超突变，表现为图上贴近底部的密集簇。"),
+    how  = list(
+      en = "Turn <b>include synonymous</b> off to look only at coding impact.
+            VAF and rainfall need a <b>VAF column</b>; many MAFs do not have one,
+            in which case those two tabs will say so.",
+      zh = "关闭<b>包含同义突变</b>可只看编码影响。VAF 和 rainfall 需要一个 <b>VAF 列</b>；很多 MAF 没有该列，这两个页签会给出提示。"),
+    example = list(
+      en = "A C>T dominated spectrum in a skin tumour points at UV damage; in a
+               lung tumour a C>A excess points at tobacco.",
+      zh = "皮肤肿瘤中以 C>T 为主的谱指向紫外损伤；肺肿瘤中 C>A 偏多则指向烟草。")
+  )
+  controls <- shiny::tagList(
+    shiny::checkboxInput(ns("use_syn"),
+                         i18n("Include synonymous variants", "包含同义突变"), value = TRUE),
+    shiny::uiOutput(ns("vaf_ui")),
+    shiny::uiOutput(ns("sample_ui")),
+    shiny::checkboxInput(ns("changepoints"),
+                         i18n("Detect kataegis change points", "检测 kataegis 变化点"),
+                         value = TRUE),
+    run_button(ns("run"), "Draw spectra", "绘制图谱")
+  )
+  step_container(
+    title     = list(en = "TiTv / VAF / rainfall", zh = "TiTv / VAF / rainfall"),
+    explainer = explainer,
+    controls  = controls,
+    summary   = shiny::uiOutput(ns("summary")),
+    preview   = bslib::navset_card_tab(
+      bslib::nav_panel("TiTv",     preview_plot_ui(ns("titv"))),
+      bslib::nav_panel("VAF",      preview_plot_ui(ns("vaf"))),
+      bslib::nav_panel(i18n("Rainfall", "Rainfall"), preview_plot_ui(ns("rain")))
+    )
+  )
+}
+
+#' @rdname mod_wes_titv
+#' @keywords internal
+mod_wes_titv_server <- function(id, rv, log_rv) {
+  shiny::moduleServer(id, function(input, output, session) {
+    ns  <- session$ns
+    res <- shiny::reactiveValues(titv = NULL, cfg = NULL)
+
+    output$vaf_ui <- shiny::renderUI({
+      shiny::req(rv$maf)
+      f <- wes_fields(rv$maf)
+      guess <- wes_guess_vaf_col(rv$maf)
+      shiny::tagList(
+        label_with_help("VAF column",
+                        "Which MAF column holds the variant allele frequency. Needed by the VAF and rainfall tabs.",
+                        label_zh = "VAF 列",
+                        tip_zh = "MAF 中存放变异等位基因频率的列，VAF 与 rainfall 页签需要它。"),
+        shiny::selectInput(ns("vaf_col"), NULL,
+                           choices = c(stats::setNames("", "(none)"), f),
+                           selected = guess %||% "")
+      )
+    })
+
+    output$sample_ui <- shiny::renderUI({
+      shiny::req(rv$maf)
+      s <- wes_samples(rv$maf)
+      shiny::tagList(
+        label_with_help("Sample for the rainfall plot",
+                        "Rainfall is per-sample: pick the one you want to inspect.",
+                        label_zh = "Rainfall 的样本",
+                        tip_zh = "Rainfall 是逐样本的：选择要查看的样本。"),
+        shiny::selectInput(ns("tsb"), NULL, choices = s,
+                           selected = if (length(s)) s[1] else NULL)
+      )
+    })
+
+    shiny::observeEvent(input$run, {
+      shiny::req(rv$maf)
+      if (!require_pkgs("maftools", "Mutation spectra")) return(NULL)
+      tv <- with_progress_notify(wes_titv(rv$maf, use_syn = isTRUE(input$use_syn)),
+                                 message = "Computing TiTv...")
+      if (is.null(tv)) return(NULL)
+      res$titv <- tv
+      res$cfg  <- list(vaf = if (nzchar(input$vaf_col %||% "")) input$vaf_col else NULL,
+                       tsb = input$tsb,
+                       cp  = isTRUE(input$changepoints))
+      mark_done(rv, "wes_titv")
+      log_step(log_rv, "WES mutation spectra",
+               params = list(useSyn = input$use_syn, vafCol = input$vaf_col,
+                             rainfall_sample = input$tsb),
+               code = c(sprintf('titv <- maftools::titv(maf, useSyn = %s, plot = FALSE)',
+                                input$use_syn),
+                        'maftools::plotTiTv(titv)'))
+    })
+
+    output$summary <- shiny::renderUI({
+      if (is.null(rv$maf)) return(wes_no_maf())
+      if (is.null(res$titv)) {
+        return(wes_prompt("Click <b>Draw spectra</b> to compute the TiTv summary.",
+                          "点击<b>绘制图谱</b>计算 TiTv 概览。"))
+      }
+      frac <- tryCatch(as.data.frame(res$titv$fraction.contribution),
+                       error = function(e) NULL)
+      pick <- function(nm) {
+        if (is.null(frac) || !nm %in% colnames(frac)) return("-")
+        sprintf("%.1f%%", mean(frac[[nm]], na.rm = TRUE))
+      }
+      bslib::layout_columns(
+        col_widths = c(3, 3, 3, 3),
+        stat_tile("C>T", pick("C>T")),
+        stat_tile("C>A", pick("C>A")),
+        stat_tile("T>C", pick("T>C")),
+        stat_tile(i18n("VAF column", "VAF 列"),
+                  res$cfg$vaf %||% i18n("none", "无"))
+      )
+    })
+
+    output$titv <- render_base_plot(function() {
+      shiny::req(res$titv)
+      maftools::plotTiTv(res = res$titv)
+    })
+
+    output$vaf <- render_base_plot(function() {
+      shiny::req(rv$maf, res$cfg)
+      if (is.null(res$cfg$vaf)) {
+        stop("No VAF column selected. Pick one in the control panel, or this MAF does not carry allele frequencies.")
+      }
+      maftools::plotVaf(maf = rv$maf, vafCol = res$cfg$vaf)
+    })
+
+    output$rain <- render_base_plot(function() {
+      shiny::req(rv$maf, res$cfg, res$cfg$tsb)
+      maftools::rainfallPlot(maf = rv$maf, tsb = res$cfg$tsb,
+                             detectChangePoints = res$cfg$cp, pointSize = 0.6)
+    })
+  })
+}

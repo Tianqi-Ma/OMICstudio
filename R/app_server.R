@@ -9,9 +9,15 @@
 #' @keywords internal
 app_server <- function(input, output, session) {
 
+  # One slot per omics for the working object (`obj` = single-cell Seurat,
+  # `maf` = maftools MAF, ...) so switching pipelines cannot leave the sidebar
+  # reporting the previous pipeline's data. `clinical` is deliberately shared:
+  # a cohort loaded once is reused by every pipeline that needs outcome.
   rv <- shiny::reactiveValues(
-    omics = NULL, obj = NULL, source = NULL, status = list(),
-    clinical = NULL   # shared OS/clinical table for prognosis across omics
+    omics = NULL, status = list(),
+    obj = NULL, source = NULL,          # single-cell
+    maf = NULL, maf_source = NULL,      # WES
+    clinical = NULL                     # shared across omics
   )
   log_rv <- shiny::reactiveVal(list())
 
@@ -64,18 +70,33 @@ app_server <- function(input, output, session) {
 
   shiny::observeEvent(input$goto, { bslib::nav_select("steps", input$goto) })
 
-  # --- Global dataset status (bottom of sidebar) -----------------------------
+  # --- Dataset status (bottom of sidebar), for the active omics --------------
   output$global_status <- shiny::renderUI({
-    obj <- rv$obj
-    if (is.null(obj)) {
-      return(shiny::div(class = "omicstudio-status-empty",
-                        i18n("No data loaded.", "尚未加载数据")))
+    empty <- function() shiny::div(class = "omicstudio-status-empty",
+                                   i18n("No data loaded.", "尚未加载数据"))
+    cohort <- if (!is.null(rv$clinical) && nrow(rv$clinical))
+      stat_line(i18n("Cohort", "队列"),
+                format(nrow(rv$clinical), big.mark = ",")) else NULL
+
+    if (identical(rv$omics, "wes")) {
+      if (is.null(rv$maf)) return(empty())
+      ov <- wes_overview(rv$maf)
+      return(shiny::tagList(
+        stat_line(i18n("Samples", "样本"), format(ov$samples, big.mark = ",")),
+        stat_line(i18n("Genes", "基因"), format(ov$genes, big.mark = ",")),
+        stat_line(i18n("Variants", "变异"), format(ov$variants, big.mark = ",")),
+        cohort
+      ))
     }
+
+    obj <- rv$obj
+    if (is.null(obj)) return(if (is.null(cohort)) empty() else shiny::tagList(cohort))
     dims <- obj_dims(obj)
     advice <- memory_advice(dims$cells)
     shiny::tagList(
       stat_line(i18n("Cells", "细胞"), format(dims$cells, big.mark = ",")),
       stat_line(i18n("Genes", "基因"), format(dims$genes, big.mark = ",")),
+      cohort,
       if (nzchar(advice))
         shiny::div(class = "omicstudio-warn", shiny::icon("triangle-exclamation"), " ", advice)
     )
@@ -104,8 +125,22 @@ app_server <- function(input, output, session) {
   mod_report_server("report", rv, log_rv)
   mod_export_server("export", rv, log_rv)
 
-  # --- Placeholder servers for planned omics steps ---------------------------
-  ph_ids <- unlist(lapply(c("wes", "bulk", "spatial", "integration"),
+  # --- WES module servers (fully implemented) --------------------------------
+  mod_wes_import_server("wes_import", rv, log_rv)
+  mod_wes_summary_server("wes_summary", rv, log_rv)
+  mod_wes_onco_server("wes_onco", rv, log_rv)
+  mod_wes_titv_server("wes_titv", rv, log_rv)
+  mod_wes_tmb_server("wes_tmb", rv, log_rv)
+  mod_wes_lolli_server("wes_lolli", rv, log_rv)
+  mod_wes_driver_server("wes_driver", rv, log_rv)
+  mod_wes_sig_server("wes_sig", rv, log_rv)
+  mod_wes_clin_server("wes_clin", rv, log_rv)
+  mod_wes_compare_server("wes_compare", rv, log_rv)
+  mod_wes_surv_server("wes_surv", rv, log_rv)
+  mod_wes_hetero_server("wes_hetero", rv, log_rv)
+
+  # --- Placeholder servers for the still-planned omics -----------------------
+  ph_ids <- unlist(lapply(c("bulk", "spatial", "integration"),
                           function(o) vapply(steps_for(o), function(s) s$v, character(1))))
   for (pid in ph_ids) mod_placeholder_server(pid, rv, log_rv)
 }

@@ -12,7 +12,7 @@
 FROM bioconductor/bioconductor_docker:RELEASE_3_18
 
 LABEL org.opencontainers.image.title="OMICstudio" \
-      org.opencontainers.image.description="Local interactive multi-omics analysis app (single-cell complete; bulk/WES/spatial/integration planned)" \
+      org.opencontainers.image.description="Local interactive multi-omics analysis app (single-cell and WES complete; bulk/spatial/integration planned)" \
       org.opencontainers.image.source="https://github.com/Tianqi-Ma/OMICstudio"
 
 # System libs occasionally needed by leiden/igraph/plotly stacks are already in
@@ -26,7 +26,12 @@ RUN R -e "install.packages(c( \
 RUN R -e "BiocManager::install(c( \
       'SingleCellExperiment','SummarizedExperiment','scater','scran', \
       'scDblFinder','glmGamPoi','SingleR','celldex','UCell','clusterProfiler', \
-      'ComplexHeatmap','slingshot','batchelor'), update=FALSE, ask=FALSE)"
+      'ComplexHeatmap','slingshot','batchelor','maftools'), update=FALSE, ask=FALSE)"
+
+# Mutational-signature extraction needs a reference genome and NMF. This layer
+# is large (~700 MB for the BSgenome); drop it if you never run that step.
+RUN R -e "install.packages('NMF', repos='https://cloud.r-project.org')" && \
+    R -e "BiocManager::install('BSgenome.Hsapiens.UCSC.hg19', update=FALSE, ask=FALSE)"
 
 # The analysis + plotting engine (scop) and its ecosystem. scop pulls a large
 # tree; give it its own layer. LIANA/mascarade/copykat for cell-cell comm & CNV.

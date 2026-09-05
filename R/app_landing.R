@@ -19,7 +19,13 @@ app_landing <- function() {
         class = "omicstudio-omcard-body",
         shiny::div(class = "omicstudio-omicon", shiny::icon(o$icon)),
         shiny::div(class = "omicstudio-omtitle", i18n(o$en, o$zh)),
-        shiny::div(class = "omicstudio-omdesc", i18n(o$desc_en, o$desc_zh))
+        shiny::div(class = "omicstudio-omdesc", i18n(o$desc_en, o$desc_zh)),
+        # say up front which pipelines actually run, rather than letting the
+        # user discover it by clicking into a wall of placeholders
+        if (isTRUE(o$ready))
+          shiny::div(class = "omicstudio-ombadge ready", i18n("Available", "已可用"))
+        else
+          shiny::div(class = "omicstudio-ombadge", i18n("Planned", "规划中"))
       )
     )
   })

@@ -55,22 +55,22 @@ steps_sc <- function() {
   list(v = v, n = n, phase = phase, en = en, zh = zh, ui = mod_placeholder_ui)
 }
 
-#' WES (maftools) steps — planned (placeholder)
+#' WES (maftools) steps — fully implemented
 #' @keywords internal
 steps_wes <- function() {
   list(
-    .ph("wes_import",  1, "wes_io",   "Import MAF",        "导入 MAF"),
-    .ph("wes_summary", 2, "wes_io",   "Summary",           "概览"),
-    .ph("wes_onco",    3, "wes_land", "Oncoplot",          "Oncoplot"),
-    .ph("wes_titv",    4, "wes_land", "TiTv / VAF / rainfall", "TiTv/VAF/rainfall"),
-    .ph("wes_tmb",     5, "wes_land", "TMB",               "突变负荷 TMB"),
-    .ph("wes_lolli",   6, "wes_land", "Lollipop / domains","Lollipop/结构域"),
-    .ph("wes_driver",  7, "wes_land", "Drivers & interactions", "驱动基因与互作"),
-    .ph("wes_sig",     8, "wes_sig",  "Mutational signatures", "突变特征"),
-    .ph("wes_clin",    9, "wes_prog", "Clinical / pathway / drug", "临床/通路/药物"),
-    .ph("wes_compare",10, "wes_prog", "Cohort comparison", "队列比较"),
-    .ph("wes_surv",   11, "wes_prog", "Mutation vs survival", "突变-预后"),
-    .ph("wes_hetero", 12, "wes_prog", "Heterogeneity",     "异质性")
+    list(v = "wes_import", n = 1,  phase = "wes_io",   en = "Import MAF",        zh = "导入 MAF",      ui = mod_wes_import_ui),
+    list(v = "wes_summary",n = 2,  phase = "wes_io",   en = "Cohort summary",    zh = "队列概览",      ui = mod_wes_summary_ui),
+    list(v = "wes_onco",   n = 3,  phase = "wes_land", en = "Oncoplot",          zh = "Oncoplot",      ui = mod_wes_onco_ui),
+    list(v = "wes_titv",   n = 4,  phase = "wes_land", en = "TiTv / VAF / rainfall", zh = "TiTv/VAF/rainfall", ui = mod_wes_titv_ui),
+    list(v = "wes_tmb",    n = 5,  phase = "wes_land", en = "TMB",               zh = "突变负荷 TMB",  ui = mod_wes_tmb_ui),
+    list(v = "wes_lolli",  n = 6,  phase = "wes_land", en = "Lollipop / domains",zh = "Lollipop/结构域", ui = mod_wes_lolli_ui),
+    list(v = "wes_driver", n = 7,  phase = "wes_land", en = "Drivers & interactions", zh = "驱动基因与互作", ui = mod_wes_driver_ui),
+    list(v = "wes_sig",    n = 8,  phase = "wes_sig",  en = "Mutational signatures", zh = "突变特征",  ui = mod_wes_sig_ui),
+    list(v = "wes_clin",   n = 9,  phase = "wes_prog", en = "Clinical / pathway / drug", zh = "临床/通路/药物", ui = mod_wes_clin_ui),
+    list(v = "wes_compare",n = 10, phase = "wes_prog", en = "Cohort comparison", zh = "队列比较",      ui = mod_wes_compare_ui),
+    list(v = "wes_surv",   n = 11, phase = "wes_prog", en = "Mutation vs survival", zh = "突变-预后",  ui = mod_wes_surv_ui),
+    list(v = "wes_hetero", n = 12, phase = "wes_prog", en = "Heterogeneity",     zh = "异质性",        ui = mod_wes_hetero_ui)
   )
 }
 
@@ -183,13 +183,15 @@ omics_catalogue <- function() {
   list(
     list(v = "sc",          icon = "circle-nodes", en = "Single-cell RNA-seq", zh = "单细胞 RNA-seq",
          desc_en = "QC, clustering, annotation, trajectory, velocity, survival (scop engine).",
-         desc_zh = "质控、聚类、注释、轨迹、速率、生存分析（scop 引擎）。", anim = "sc"),
+         desc_zh = "质控、聚类、注释、轨迹、速率、生存分析（scop 引擎）。", anim = "sc",
+         ready = TRUE),
     list(v = "bulk",        icon = "chart-column", en = "Bulk RNA-seq", zh = "Bulk RNA-seq",
          desc_en = "DE, subtyping, enrichment, WGCNA, prognosis (TOmicsVis).",
          desc_zh = "差异表达、分子分型、富集、WGCNA、预后（TOmicsVis）。", anim = "bulk"),
     list(v = "wes",         icon = "dna", en = "WES / somatic mutations", zh = "WES / 体细胞突变",
          desc_en = "Oncoplot, TMB, signatures, drivers, mutation-survival (maftools).",
-         desc_zh = "Oncoplot、TMB、突变特征、驱动基因、突变-预后（maftools）。", anim = "wes"),
+         desc_zh = "Oncoplot、TMB、突变特征、驱动基因、突变-预后（maftools）。", anim = "wes",
+         ready = TRUE),
     list(v = "spatial",     icon = "border-all", en = "Spatial transcriptomics", zh = "空间转录组",
          desc_en = "Tissue-overlay viz, spatial domains, SVGs, deconvolution (Seurat).",
          desc_zh = "组织叠加图、空间域、空间可变基因、去卷积（Seurat）。", anim = "spatial"),

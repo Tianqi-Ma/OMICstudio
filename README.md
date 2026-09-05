@@ -16,10 +16,11 @@ Every step is designed for beginners *and* experts:
 - 🧾 a **reproducibility log** you can export as an R script or a narrated report
 - 🌗 dark / light themes, English / 中文 — switchable from the top bar
 
-> **Status (v0.4.0):** the **single-cell RNA-seq** pipeline is complete — 21
-> steps, all wired and statically validated. The other four omics show their
-> planned steps in the interface and are not implemented yet. Nothing has been
-> run end-to-end against a live Seurat/scop install; see [Caveats](#caveats).
+> **Status (v0.5.0):** the **single-cell RNA-seq** (21 steps) and **WES /
+> somatic mutation** (12 steps) pipelines are complete and statically validated.
+> The other three omics show their planned steps in the interface and are not
+> implemented yet. Neither pipeline has been run end-to-end against a live
+> install of its engine; see [Caveats](#caveats).
 
 ---
 
@@ -30,13 +31,17 @@ Choosing a card on the start screen routes you into that pipeline.
 | Omics | Engine | Status |
 |---|---|---|
 | **Single-cell RNA-seq** | [scop](https://github.com/mengxu98/scop) + Seurat | ✅ complete (21 steps) |
+| **WES / somatic mutations** | [maftools](https://bioconductor.org/packages/maftools) | ✅ complete (12 steps) |
 | **Bulk RNA-seq** | TOmicsVis + DESeq2 | 🚧 roadmap shown in-app |
-| **WES / somatic mutations** | maftools | 🚧 roadmap shown in-app |
 | **Spatial transcriptomics** | Seurat + SpatialExperiment | 🚧 roadmap shown in-app |
 | **Multi-omics integration** | MOFA2 / iClusterPlus / SNFtool | 🚧 roadmap shown in-app |
 
 Clinical follow-up is **shared across pipelines**: load a cohort once in the
-*Clinical & survival* step and every pipeline that needs outcome data reuses it.
+single-cell *Clinical & survival* step and the WES *Mutation vs survival* step
+picks it up automatically — same curves, same log-rank test, same code path.
+
+maftools installs as an ordinary Bioconductor binary, so the WES pipeline needs
+no source build and runs on a machine that blocks compilation.
 
 ---
 
@@ -143,12 +148,38 @@ scDblFinder, Leiden, Harmony, scop/SCP plotting throughout.
 
 ---
 
+## The WES steps
+
+Four phases, twelve steps, all over maftools.
+
+| Phase | # | Step | What it does |
+|---|---|------|-----------------|
+| **Input** | 1 | Import MAF | MAF (+ optional clinical table), or the bundled TCGA LAML demo |
+| | 2 | Cohort summary | variant classes, per-sample burden, top mutated genes |
+| **Landscape** | 3 | Oncoplot | the waterfall view, with clinical annotation bars |
+| | 4 | TiTv / VAF / rainfall | mutation spectrum, allele frequencies, kataegis |
+| | 5 | TMB | mutations per Mb, per sample, over your capture size |
+| | 6 | Lollipop / domains | one gene's mutations along the protein, over its domains |
+| | 7 | Drivers & interactions | oncodrive positional clustering; co-occurrence / mutual exclusivity |
+| **Signatures** | 8 | Mutational signatures | trinucleotide matrix → de-novo signatures → COSMIC match |
+| **Clinical & prognosis** | 9 | Clinical / pathway / drug | gene enrichment by clinical group, oncogenic pathways, drug-gene interactions |
+| | 10 | Cohort comparison | Fisher test between two clinical groups, forest plot |
+| | 11 | Mutation vs survival | mutant vs WT Kaplan-Meier + log-rank, via the **shared** survival layer |
+| | 12 | Heterogeneity | VAF clustering per sample, MATH score |
+
+Step 1 offers maftools' bundled **TCGA LAML** cohort (193 samples), so the whole
+pipeline is explorable offline with no data of your own.
+
+---
+
 ## Caveats
 
 - **Not yet validated end-to-end.** Every file parses, every step's UI builds,
-  every module's outputs evaluate, and the package installs — but the pipeline
-  has **not been run against a live Seurat/scop install with real data**. A few
-  scop argument names still need checking on first real run.
+  every module's outputs evaluate, and the package installs — but neither
+  pipeline has been **run against a live install of its engine with real data**.
+  A few scop and maftools argument names still need checking on first real run;
+  `OMICstudio:::wes_missing_api()` reports whether your installed maftools still
+  provides everything the WES modules call.
 - **`scop` is the plotting and compute engine** for the single-cell pipeline and
   is a GitHub package; if your machine blocks source builds, use the Docker
   image, which bakes in scop and a pre-built conda environment for the
@@ -162,6 +193,11 @@ scDblFinder, Leiden, Harmony, scop/SCP plotting throughout.
 - **The "optimal" survival cutpoint is exploratory.** It is chosen to maximise
   separation, so its p-value is optimistic — report the median split, or validate
   the cutpoint in an independent cohort.
+- **Mutational signatures need a BSgenome package** (`BSgenome.Hsapiens.UCSC.hg19`
+  or hg38) plus `NMF`. That is a large download; every other WES step works
+  without it.
+- **VAF-based steps need a VAF column.** Many callers do not report one, in which
+  case the VAF, rainfall and heterogeneity views say so rather than guessing.
 - **Memory** scales with cell count. <100k cells is comfortable on 16–32 GB;
   larger needs more. The app warns you and offers downsampling.
 
@@ -178,6 +214,7 @@ R/app_server.R        omics routing + shared hub (rv$obj, rv$clinical, rv$status
 R/steps.R             per-omics step registries — the single source of truth
 R/mod_*.R             one module per step
 R/fct_compute.R       scop/Seurat compute wrappers
+R/fct_wes.R           maftools wrappers + the MAF -> survival bridge
 R/fct_plots.R         scop plotting wrappers + shared theme/palette
 R/fct_survival.R      omics-agnostic survival maths (survival + ggplot2)
 R/utils_ui.R          the shared step layout, bilingual helpers
@@ -193,6 +230,10 @@ Before committing, the checks that must pass:
 testthat::test_dir("tests/testthat")   # includes a guard that every module's
                                        # outputs evaluate, and that no function
                                        # calls a name that does not exist
+```
+```sh
+tools/check_mirror.sh                  # shared files must stay identical to
+                                       # scStudio apart from the package name
 ```
 
 The single-cell pipeline is also maintained standalone as
