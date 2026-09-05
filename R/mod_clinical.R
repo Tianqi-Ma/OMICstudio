@@ -114,7 +114,7 @@ mod_clinical_server <- function(id, rv, log_rv) {
     output$mapping <- shiny::renderUI({
       df <- raw()
       if (is.null(df)) {
-        return(shiny::div(class = "omicstudio-status-empty",
+        return(shiny::div(class = "omicone-status-empty",
                           i18n("Upload a clinical table to continue.",
                                "请先上传临床表格。")))
       }
@@ -171,7 +171,7 @@ mod_clinical_server <- function(id, rv, log_rv) {
       if (identical(input$mode, "clinical")) {
         cols <- setdiff(names(df), c(input$id_col, input$time_col, input$event_col))
         if (!length(cols)) {
-          return(shiny::div(class = "omicstudio-status-empty",
+          return(shiny::div(class = "omicone-status-empty",
                             i18n("No other column to group by.", "没有可用于分组的其他列。")))
         }
         return(shiny::tagList(
@@ -182,7 +182,7 @@ mod_clinical_server <- function(id, rv, log_rv) {
       # composition mode: needs the working object's metadata
       md <- obj_meta(rv$obj)
       if (!ncol(md)) {
-        return(shiny::div(class = "omicstudio-status-empty",
+        return(shiny::div(class = "omicone-status-empty",
                           i18n("Load and cluster your data first to group by composition.",
                                "请先加载并聚类数据，才能按细胞组成分组。")))
       }
@@ -347,7 +347,7 @@ mod_clinical_server <- function(id, rv, log_rv) {
     output$summary <- shiny::renderUI({
       d <- res$df
       if (is.null(d)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Upload a clinical table, choose a grouping, then click <b>Run survival analysis</b>.",
                                "上传临床表格，选择分组方式，然后点击<b>运行生存分析</b>。")))
       }
@@ -373,7 +373,7 @@ mod_clinical_server <- function(id, rv, log_rv) {
 
     output$cox_slot <- shiny::renderUI({
       if (is.null(res$cox) || !nrow(res$cox)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Pick one or more Cox covariates, then run.",
                                "选择一个或多个 Cox 协变量后运行。")))
       }

@@ -3,7 +3,7 @@
 # Since the omics landing page moved the pipeline into `output$main_body`'s
 # renderUI, `app_ui()` no longer contains any module -- so the shell smoke test
 # stopped exercising module UI *or* module outputs. A call to a function that
-# does not exist (e.g. a half-applied scStudio -> OMICstudio rename) therefore
+# does not exist (e.g. a half-applied scStudio -> OmicOne rename) therefore
 # passed every test and only failed in the browser.
 #
 # These tests close that hole two ways:

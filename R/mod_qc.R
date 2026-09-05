@@ -111,7 +111,7 @@ mod_qc_server <- function(id, rv, log_rv) {
     })
 
     output$summary <- shiny::renderUI({
-      if (is.na(res$before)) return(shiny::div(class = "omicstudio-placeholder",
+      if (is.na(res$before)) return(shiny::div(class = "omicone-placeholder",
                                                i18n("Set thresholds and click Compute & filter.",
                                                     "设定阈值后点击“计算并过滤”。")))
       removed <- res$before - res$after
@@ -141,7 +141,7 @@ mod_qc_server <- function(id, rv, log_rv) {
                                      name = NULL) +
         ggplot2::labs(x = "UMI count (log10)", y = "Mitochondrial %",
                       title = "QC: cells kept vs flagged") +
-        omicstudio_theme()
+        omicone_theme()
     })
   })
 }

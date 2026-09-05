@@ -101,13 +101,13 @@ mod_wes_surv_server <- function(id, rv, log_rv) {
     output$mapping_ui <- shiny::renderUI({
       shiny::req(rv$maf)
       if (identical(input$src, "shared")) {
-        return(shiny::div(class = "omicstudio-status-empty",
+        return(shiny::div(class = "omicone-status-empty",
                           i18n("Using the cohort from the Clinical &amp; survival step.",
                                "正在使用「临床与生存」步骤中的队列。")))
       }
       cols <- wes_clinical_cols(rv$maf)
       if (!length(cols)) {
-        return(shiny::div(class = "omicstudio-status-empty",
+        return(shiny::div(class = "omicone-status-empty",
                           i18n("This MAF carries no clinical columns. Attach a clinical table on the Import step, or load a cohort in the Clinical &amp; survival step.",
                                "该 MAF 未附带临床列。请在导入步骤附上临床表，或在「临床与生存」步骤加载队列。")))
       }

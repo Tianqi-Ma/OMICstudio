@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # ---------------------------------------------------------------------------
-# OMICstudio end-to-end smoke test (headless — no browser, no clicking)
+# OmicOne end-to-end smoke test (headless — no browser, no clicking)
 #
 # Runs the real compute chain on the bundled tiny demo dataset:
 #   import -> QC metrics -> MAD filter -> doublets -> normalize ->
@@ -20,14 +20,14 @@ step <- function(label, expr) {
   invisible(res)
 }
 
-cat("== OMICstudio smoke test ==\n")
+cat("== OmicOne smoke test ==\n")
 
 # --- load the package sources without building (works under locked-down policy) ---
 if (!requireNamespace("pkgload", quietly = TRUE)) {
   install.packages("pkgload", repos = "https://cloud.r-project.org")
 }
 suppressMessages(pkgload::load_all(".", quiet = TRUE, helpers = FALSE, attach_testthat = FALSE))
-ns <- asNamespace("OMICstudio")
+ns <- asNamespace("OmicOne")
 
 # --- dependency check ---
 need <- c("Seurat", "SeuratObject", "Matrix")

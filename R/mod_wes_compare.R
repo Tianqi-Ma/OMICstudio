@@ -73,7 +73,7 @@ mod_wes_compare_server <- function(id, rv, log_rv) {
       shiny::req(rv$maf)
       cols <- wes_clinical_cols(rv$maf)
       if (!length(cols)) {
-        return(shiny::div(class = "omicstudio-status-empty",
+        return(shiny::div(class = "omicone-status-empty",
                           i18n("This MAF has no clinical columns. Load a clinical table on the Import step.",
                                "该 MAF 无临床列。请在导入步骤加载临床表。")))
       }
@@ -95,7 +95,7 @@ mod_wes_compare_server <- function(id, rv, log_rv) {
     output$level_ui <- shiny::renderUI({
       lv <- tryCatch(feature_levels(), error = function(e) character(0))
       if (length(lv) < 2) {
-        return(shiny::div(class = "omicstudio-status-empty",
+        return(shiny::div(class = "omicone-status-empty",
                           i18n("That column needs at least two levels with 2+ samples each.",
                                "该列需要至少两个水平，且每个水平至少有 2 个样本。")))
       }

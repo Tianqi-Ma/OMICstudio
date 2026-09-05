@@ -86,7 +86,7 @@ mod_embed_server <- function(id, rv, log_rv) {
       choices <- intersect(c("pca", "harmony"), reds)
       if (length(choices) == 0) choices <- reds
       if (length(choices) == 0) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("No reductions yet — run PCA first.",
                                "还没有降维结果 —— 请先运行 PCA。")))
       }
@@ -136,7 +136,7 @@ mod_embed_server <- function(id, rv, log_rv) {
 
     output$summary <- shiny::renderUI({
       if (!isTRUE(res$done)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Set parameters and click Run embedding.",
                                "设置参数后点击“运行降维”。")))
       }
@@ -192,7 +192,7 @@ mod_embed_server <- function(id, rv, log_rv) {
         ggplot2::labs(x = paste0(toupper(reduction), " 1"),
                       y = paste0(toupper(reduction), " 2"),
                       title = sprintf("%s embedding", toupper(res$method))) +
-        omicstudio_theme()
+        omicone_theme()
     })
   })
 }

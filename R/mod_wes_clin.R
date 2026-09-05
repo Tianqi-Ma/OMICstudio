@@ -68,7 +68,7 @@ mod_wes_clin_server <- function(id, rv, log_rv) {
       shiny::req(rv$maf)
       cols <- wes_clinical_cols(rv$maf)
       if (!length(cols)) {
-        return(shiny::div(class = "omicstudio-status-empty",
+        return(shiny::div(class = "omicone-status-empty",
                           i18n("No clinical columns in this MAF — pathways and drugs still work.",
                                "该 MAF 无临床列——通路与药物分析仍可运行。")))
       }

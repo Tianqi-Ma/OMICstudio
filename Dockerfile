@@ -1,4 +1,4 @@
-# OMICstudio — dependency-free distribution.
+# OmicOne — dependency-free distribution.
 # Everything (R + Seurat + Bioconductor + scop + the app) is baked into this image, so a
 # user only needs Docker. Build once, then anyone can run:
 #
@@ -11,9 +11,9 @@
 
 FROM bioconductor/bioconductor_docker:RELEASE_3_18
 
-LABEL org.opencontainers.image.title="OMICstudio" \
+LABEL org.opencontainers.image.title="OmicOne" \
       org.opencontainers.image.description="Local interactive multi-omics analysis app (single-cell and WES complete; bulk/spatial/integration planned)" \
-      org.opencontainers.image.source="https://github.com/Tianqi-Ma/OMICstudio"
+      org.opencontainers.image.source="https://github.com/Tianqi-Ma/OmicOne"
 
 # System libs occasionally needed by leiden/igraph/plotly stacks are already in
 # the Bioconductor base. Install R package dependencies in a cached layer.
@@ -45,12 +45,12 @@ RUN R -e "reticulate::install_miniconda()" && \
     R -e "tryCatch(scop::PrepareEnv(), error=function(e) message('PrepareEnv at build: ', conditionMessage(e)))"
 
 # Install the app itself (copy source and install from local path).
-WORKDIR /opt/OMICstudio
-COPY . /opt/OMICstudio
-RUN R -e "remotes::install_local('/opt/OMICstudio', dependencies = FALSE, upgrade = 'never')"
+WORKDIR /opt/OmicOne
+COPY . /opt/OmicOne
+RUN R -e "remotes::install_local('/opt/OmicOne', dependencies = FALSE, upgrade = 'never')"
 
 EXPOSE 3838
 
 # Bind to 0.0.0.0 so the host browser can reach the container; do NOT auto-open a
 # browser inside the container. Users open http://localhost:3838 themselves.
-CMD ["R", "-e", "OMICstudio::run_app(host='0.0.0.0', port=3838, launch.browser=FALSE)"]
+CMD ["R", "-e", "OmicOne::run_app(host='0.0.0.0', port=3838, launch.browser=FALSE)"]

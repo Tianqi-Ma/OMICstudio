@@ -65,7 +65,7 @@ overview_plots <- function(obj, species = guess_species(obj)) {
     ggplot2::facet_wrap(~metric, scales = "free", nrow = 1) +
     ggplot2::scale_fill_manual(values = sc_palette(length(metrics)), guide = "none") +
     ggplot2::labs(x = NULL, y = NULL, title = "Per-cell QC metrics (pre-filter)") +
-    omicstudio_theme() +
+    omicone_theme() +
     ggplot2::theme(axis.text.x = ggplot2::element_blank())
 
   # --- 2. Top-20 highly expressed genes (fraction of total counts) ---
@@ -81,7 +81,7 @@ overview_plots <- function(obj, species = guess_species(obj)) {
       ggplot2::geom_col(fill = sc_palette(1)) +
       ggplot2::coord_flip() +
       ggplot2::labs(x = NULL, y = "% of total counts", title = "Top expressed genes") +
-      omicstudio_theme()
+      omicone_theme()
   }
 
   # --- 3. nCount vs nFeature scatter ---
@@ -92,7 +92,7 @@ overview_plots <- function(obj, species = guess_species(obj)) {
       ggplot2::scale_x_log10() +
       ggplot2::labs(x = "UMIs / cell (log10)", y = "Genes / cell",
                     title = "Counts vs genes") +
-      omicstudio_theme()
+      omicone_theme()
   }
 
   plots <- Filter(Negate(is.null), list(p_vln, p_top, p_sc))

@@ -138,7 +138,7 @@ mod_enrichment_server <- function(id, rv, log_rv) {
 
     output$summary <- shiny::renderUI({
       if (!isTRUE(res$done)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Run the Markers step first, then choose a database and click <b>Run enrichment</b>.",
                                "请先运行“标志基因”步骤，然后选择数据库并点击<b>运行富集分析</b>。")))
       }

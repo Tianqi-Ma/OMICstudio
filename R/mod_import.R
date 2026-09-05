@@ -216,14 +216,14 @@ mod_import_server <- function(id, rv, log_rv, parent = NULL) {
     output$summary <- shiny::renderUI({
       obj <- rv$obj
       if (is.null(obj)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("No data yet. Tip: pick <b>Demo data</b> and click <b>Load demo data</b> to try it instantly.",
                                "尚无数据。提示：选择<b>演示数据</b>并点击<b>加载演示数据</b>即可立即试用。")))
       }
       ov <- data_overview(obj)
       fmt <- function(x) if (is.na(x)) "-" else format(round(x), big.mark = ",")
       shiny::div(
-        class = "omicstudio-summarystrip",
+        class = "omicone-summarystrip",
         stat_tile(i18n("Cells", "细胞"), fmt(ov$cells)),
         stat_tile(i18n("Genes", "基因"), fmt(ov$genes)),
         stat_tile(i18n("Median genes/cell", "中位基因/细胞"), fmt(ov$median_genes)),

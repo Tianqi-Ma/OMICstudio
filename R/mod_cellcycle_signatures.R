@@ -191,7 +191,7 @@ mod_cellcycle_signatures_server <- function(id, rv, log_rv) {
       score_cols <- cols[grepl("Score|score|_UCell$|Phase", cols)]
       score_cols <- unique(score_cols)
       if (length(score_cols) == 0) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Run scoring to enable the preview.",
                                "运行评分以启用预览。")))
       }
@@ -200,7 +200,7 @@ mod_cellcycle_signatures_server <- function(id, rv, log_rv) {
 
     output$summary <- shiny::renderUI({
       if (!isTRUE(res$cc_done) && !isTRUE(res$sig_done)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Score the cell cycle and/or gene signatures.",
                                "对细胞周期和/或基因信号进行评分。")))
       }

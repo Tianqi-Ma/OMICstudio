@@ -53,11 +53,11 @@ mod_annotate_ui <- function(id) {
       shiny::actionButton(ns("apply_manual"),
                           i18n("Apply labels", "应用标签"),
                           icon = shiny::icon("check"),
-                          class = "btn-primary omicstudio-run w-100")
+                          class = "btn-primary omicone-run w-100")
     ),
     shiny::conditionalPanel(
       sprintf("input['%s'] == 'singler'", ns("method")),
-      shiny::div(class = "omicstudio-note",
+      shiny::div(class = "omicone-note",
                  i18n("SingleR downloads a celldex reference (needs internet) the first time.",
                       "首次运行时 SingleR 会下载一个 celldex 参考数据集（需要联网）。")),
       label_with_help("Reference",
@@ -74,7 +74,7 @@ mod_annotate_ui <- function(id) {
     ),
     shiny::conditionalPanel(
       sprintf("input['%s'] == 'azimuth'", ns("method")),
-      shiny::div(class = "omicstudio-note",
+      shiny::div(class = "omicone-note",
                  i18n("Azimuth maps to a curated reference (needs internet and the Azimuth package).",
                       "Azimuth 会映射到一个精选的参考数据集（需要联网和 Azimuth 包）。")),
       run_button(ns("run_azimuth"), "Run Azimuth", "运行 Azimuth")
@@ -111,7 +111,7 @@ mod_annotate_server <- function(id, rv, log_rv) {
     output$manual_inputs <- shiny::renderUI({
       lv <- cluster_levels()
       if (is.null(lv) || !length(lv)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("No clusters found. Run clustering first.",
                                "未找到簇。请先运行聚类。")))
       }
@@ -202,7 +202,7 @@ mod_annotate_server <- function(id, rv, log_rv) {
     output$summary <- shiny::renderUI({
       md <- obj_meta(rv$obj)
       if (is.null(md) || !("celltype" %in% colnames(md))) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("No annotation yet. Pick a method and run it.",
                                "还没有注释结果。请选择一种方法并运行。")))
       }
@@ -216,7 +216,7 @@ mod_annotate_server <- function(id, rv, log_rv) {
           stat_tile(i18n("Cells annotated", "已注释细胞数"), format(sum(df$n), big.mark = ","))
         ),
         shiny::tags$table(
-          class = "table table-sm omicstudio-dist",
+          class = "table table-sm omicone-dist",
           shiny::tags$thead(shiny::tags$tr(
             shiny::tags$th(i18n("Cell type", "细胞类型")),
             shiny::tags$th(i18n("Cells", "细胞数")))),
@@ -250,7 +250,7 @@ mod_annotate_server <- function(id, rv, log_rv) {
         ggplot2::scale_colour_manual(values = sc_palette(cats), name = "Cell type") +
         ggplot2::labs(x = paste0(red, " 1"), y = paste0(red, " 2"),
                       title = "Cells coloured by annotated cell type") +
-        omicstudio_theme()
+        omicone_theme()
     })
   })
 }

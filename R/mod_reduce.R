@@ -99,7 +99,7 @@ mod_reduce_server <- function(id, rv, log_rv) {
     })
 
     output$summary <- shiny::renderUI({
-      if (!isTRUE(res$done)) return(shiny::div(class = "omicstudio-placeholder",
+      if (!isTRUE(res$done)) return(shiny::div(class = "omicone-placeholder",
                                                i18n("Set parameters and click Select features & run PCA.",
                                                     "设置参数并点击选择特征并运行 PCA。")))
       bslib::layout_columns(
@@ -119,7 +119,7 @@ mod_reduce_server <- function(id, rv, log_rv) {
         ggplot2::geom_point(colour = sc_palette(1), size = 1.4) +
         ggplot2::labs(x = "Principal component", y = "Standard deviation",
                       title = "PCA elbow plot / PCA 肘部图") +
-        omicstudio_theme()
+        omicone_theme()
     })
   })
 }

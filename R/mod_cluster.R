@@ -82,7 +82,7 @@ mod_cluster_server <- function(id, rv, log_rv) {
       choices <- intersect(c("pca", "harmony"), reds)
       if (length(choices) == 0) choices <- reds
       if (length(choices) == 0) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("No reductions yet — run PCA first.",
                                "尚无降维结果——请先运行 PCA。")))
       }
@@ -136,7 +136,7 @@ mod_cluster_server <- function(id, rv, log_rv) {
 
     output$summary <- shiny::renderUI({
       if (!isTRUE(res$done)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Set parameters and click Run clustering.",
                                "设置参数并点击运行聚类。")))
       }
@@ -167,7 +167,7 @@ mod_cluster_server <- function(id, rv, log_rv) {
                           title = sprintf("Clusters on %s (resolution %s) / %s 上的聚类（分辨率 %s）",
                                           toupper(red), format(res$res_used),
                                           toupper(red), format(res$res_used))) +
-            omicstudio_theme()
+            omicone_theme()
         )
       }
 
@@ -186,7 +186,7 @@ mod_cluster_server <- function(id, rv, log_rv) {
                       title = sprintf("Cluster sizes (resolution %s) / 簇大小（分辨率 %s）",
                                       format(res$res_used), format(res$res_used)),
                       caption = "No 2D map yet - run step 8 (Embed) to see clusters on a UMAP. / 尚无二维图——运行第 8 步（嵌入）以在 UMAP 上查看聚类。") +
-        omicstudio_theme()
+        omicone_theme()
     })
   })
 }

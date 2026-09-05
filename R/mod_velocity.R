@@ -35,7 +35,7 @@ mod_velocity_ui <- function(id) {
       zh = "在一个分化系统中，速率箭头应从祖细胞向外流向成熟细胞类型。")
   )
   controls <- shiny::tagList(
-    shiny::div(class = "omicstudio-note",
+    shiny::div(class = "omicone-note",
                i18n("Requires spliced/unspliced layers and a Python conda env (scop::PrepareEnv()).",
                     "需要剪接/未剪接图层以及 Python conda 环境（scop::PrepareEnv()）。")),
     label_with_help("Mode",
@@ -111,7 +111,7 @@ mod_velocity_server <- function(id, rv, log_rv) {
 
     output$summary <- shiny::renderUI({
       if (!isTRUE(res$done)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Ensure spliced/unspliced layers exist, then click <b>Run velocity</b>.",
                                "确认存在剪接/未剪接图层后，点击<b>运行 RNA 速率</b>。")))
       }

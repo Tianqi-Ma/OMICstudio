@@ -1,4 +1,4 @@
-/* OMICstudio client-side helpers: language switch + startup animation */
+/* OmicOne client-side helpers: language switch + startup animation */
 (function () {
   "use strict";
 
@@ -7,10 +7,10 @@
   // Each translatable element has class "i18n" and data-en / data-zh holding the
   // two versions (may be HTML). We swap innerHTML to the active language.
   // ---------------------------------------------------------------------------
-  window.OMICstudioLang = "en";
+  window.OmicOneLang = "en";
 
   function applyLang(root) {
-    var lang = window.OMICstudioLang;
+    var lang = window.OmicOneLang;
     var scope = root || document;
     var nodes = scope.querySelectorAll(".i18n");
     nodes.forEach(function (el) {
@@ -20,13 +20,13 @@
     });
   }
 
-  window.OMICstudioSetLang = function (lang) {
-    window.OMICstudioLang = (lang === "zh") ? "zh" : "en";
-    document.body.setAttribute("data-lang", window.OMICstudioLang);
+  window.OmicOneSetLang = function (lang) {
+    window.OmicOneLang = (lang === "zh") ? "zh" : "en";
+    document.body.setAttribute("data-lang", window.OmicOneLang);
     applyLang(document);
     // reflect active state on the segmented control
-    document.querySelectorAll(".omicstudio-lang-btn").forEach(function (b) {
-      b.classList.toggle("active", b.getAttribute("data-lang") === window.OMICstudioLang);
+    document.querySelectorAll(".omicone-lang-btn").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-lang") === window.OmicOneLang);
     });
   };
 
@@ -41,9 +41,9 @@
   // UMAP-like clusters, then the logo fades in; the splash fades out on load.
   // ---------------------------------------------------------------------------
   function runSplash() {
-    var splash = document.getElementById("omicstudio-splash");
+    var splash = document.getElementById("omicone-splash");
     if (!splash) return;
-    var canvas = document.getElementById("omicstudio-splash-canvas");
+    var canvas = document.getElementById("omicone-splash-canvas");
     if (!canvas || !canvas.getContext) { fadeOut(splash); return; }
     var ctx = canvas.getContext("2d");
     var W, H;
@@ -99,7 +99,7 @@
       if (p < 1) {
         requestAnimationFrame(frame);
       } else {
-        var logo = document.getElementById("omicstudio-splash-logo");
+        var logo = document.getElementById("omicone-splash-logo");
         if (logo) logo.classList.add("show");
         setTimeout(function () { fadeOut(splash); }, 750);
       }
@@ -211,10 +211,10 @@
   }
 
   function wireCards() {
-    document.querySelectorAll(".omicstudio-omcard").forEach(function (card) {
+    document.querySelectorAll(".omicone-omcard").forEach(function (card) {
       if (card.dataset.wired) return;
       card.dataset.wired = "1";
-      var canvas = card.querySelector(".omicstudio-omcanvas");
+      var canvas = card.querySelector(".omicone-omcanvas");
       var kind = card.getAttribute("data-anim");
       var anim = null;
       card.addEventListener("mouseenter", function () { if (canvas && !anim) anim = cardAnim(canvas, kind); });

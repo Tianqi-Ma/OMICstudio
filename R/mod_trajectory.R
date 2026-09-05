@@ -48,7 +48,7 @@ mod_trajectory_ui <- function(id) {
                                    "Palantir *" = "palantir",
                                    "WOT *"     = "wot"),
                        selected = "slingshot"),
-    shiny::div(class = "omicstudio-note",
+    shiny::div(class = "omicone-note",
                i18n("* PAGA / Palantir / WOT need a Python conda environment (run scop::PrepareEnv() once).",
                     "* PAGA / Palantir / WOT 需要 Python conda 环境（首次使用请运行 scop::PrepareEnv()）。")),
     label_with_help("Group by (metadata column)",
@@ -140,7 +140,7 @@ mod_trajectory_server <- function(id, rv, log_rv) {
 
     output$summary <- shiny::renderUI({
       if (!isTRUE(res$done)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Pick a method and group, then click <b>Run trajectory</b>.",
                                "选择方法与分组，然后点击<b>运行轨迹分析</b>。")))
       }

@@ -1,8 +1,8 @@
-Package: OMICstudio
+Package: OmicOne
 Title: Interactive Local Multi-Omics Analysis Studio
-Version: 0.5.0
+Version: 0.6.0
 Authors@R:
-    person("OMICstudio", "Authors", email = "noreply@example.com", role = c("aut", "cre"))
+    person("OmicOne", "Authors", email = "noreply@example.com", role = c("aut", "cre"))
 Description: A localhost-first, browser-based interactive application for
     multi-omics analysis. Users launch the app with a single command, pick an
     omics type, and work through that pipeline step by step -- entirely on their
@@ -89,5 +89,5 @@ Suggests:
 biocViews:
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-URL: https://github.com/Tianqi-Ma/OMICstudio
-BugReports: https://github.com/Tianqi-Ma/OMICstudio/issues
+URL: https://github.com/Tianqi-Ma/OmicOne
+BugReports: https://github.com/Tianqi-Ma/OmicOne/issues

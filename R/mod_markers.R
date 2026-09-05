@@ -69,7 +69,7 @@ mod_markers_ui <- function(id) {
     summary   = shiny::uiOutput(ns("summary")),
     preview   = shiny::tagList(
       preview_plot_ui(ns("preview")),
-      shiny::div(class = "omicstudio-table", shiny::uiOutput(ns("table")))
+      shiny::div(class = "omicone-table", shiny::uiOutput(ns("table")))
     )
   )
 }
@@ -105,7 +105,7 @@ mod_markers_server <- function(id, rv, log_rv) {
     output$summary <- shiny::renderUI({
       df <- markers()
       if (is.null(df)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Set options and click <b>Find markers</b>.",
                                "设置选项后点击<b>查找标志基因</b>。")))
       }
@@ -153,7 +153,7 @@ mod_markers_server <- function(id, rv, log_rv) {
                                    guide = "none") +
         ggplot2::labs(x = NULL, y = "avg log2 fold-change",
                       title = "Top marker genes per cluster") +
-        omicstudio_theme()
+        omicone_theme()
     })
 
     output$table <- shiny::renderUI({

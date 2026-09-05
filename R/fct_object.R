@@ -89,7 +89,7 @@ embedding_df <- function(obj, reduction, dims = c(1, 2), color_by = NULL) {
 #' @param project Project name for a freshly created object.
 #' @return A Seurat object.
 #' @keywords internal
-as_seurat <- function(x, project = "OMICstudio") {
+as_seurat <- function(x, project = "OmicOne") {
   if (!has_pkg("Seurat") || !has_pkg("SeuratObject")) {
     stop("Package 'Seurat' is required to build the working object.")
   }

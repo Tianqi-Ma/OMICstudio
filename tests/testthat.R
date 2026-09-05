@@ -1,3 +1,3 @@
 library(testthat)
-library(OMICstudio)
-test_check("OMICstudio")
+library(OmicOne)
+test_check("OmicOne")

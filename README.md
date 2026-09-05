@@ -1,4 +1,4 @@
-# OMICstudio
+# OmicOne
 
 > 🌐 **Languages:** **English** · [中文版 README](README.zh-CN.md)
 
@@ -16,7 +16,12 @@ Every step is designed for beginners *and* experts:
 - 🧾 a **reproducibility log** you can export as an R script or a narrated report
 - 🌗 dark / light themes, English / 中文 — switchable from the top bar
 
-> **Status (v0.5.0):** the **single-cell RNA-seq** (21 steps) and **WES /
+> **Renamed:** this project was called **OMICstudio** up to v0.5.0. The name
+> clashed with [OmicStudio](https://www.omicstudio.cn), an established cloud
+> platform — an unhelpful collision for a tool whose whole point is that nothing
+> leaves your machine. Same code, new name; see [NEWS.md](NEWS.md).
+
+> **Status (v0.6.0):** the **single-cell RNA-seq** (21 steps) and **WES /
 > somatic mutation** (12 steps) pipelines are complete and statically validated.
 > The other three omics show their planned steps in the interface and are not
 > implemented yet. Neither pipeline has been run end-to-end against a live
@@ -48,7 +53,7 @@ no source build and runs on a machine that blocks compilation.
 ## Why "localhost-first"?
 
 Real omics analysis (Seurat/Bioconductor) needs native compute and real RAM.
-Browser-only (WASM) apps can't run it. So OMICstudio runs a **local server +
+Browser-only (WASM) apps can't run it. So OmicOne runs a **local server +
 browser UI**: the interface is a web page, but all computation happens on *your*
 machine. This is the same model as `cellxgene launch`.
 
@@ -61,8 +66,8 @@ Pick the tier that matches how much you want to install.
 ### A. You already have R (lightest)
 ```r
 # install.packages("remotes")
-remotes::install_github("Tianqi-Ma/OMICstudio")
-OMICstudio::run_app()   # opens your browser automatically
+remotes::install_github("Tianqi-Ma/OmicOne")
+OmicOne::run_app()   # opens your browser automatically
 ```
 Needs R ≥ 4.1 with **shiny ≥ 1.7.4** and **bslib ≥ 0.7.0** (shiny ≥ 1.8.1 is
 recommended), plus the heavy analysis packages for the steps you actually run.
@@ -72,8 +77,8 @@ Smallest download, one command.
 Everything (R + Seurat + Bioconductor + scop + the app) is baked into one image.
 You only need [Docker](https://www.docker.com/products/docker-desktop/).
 ```bash
-docker build -t omicstudio .           # build once from this repo
-docker run --rm -p 3838:3838 -m 16g omicstudio
+docker build -t omicone .           # build once from this repo
+docker run --rm -p 3838:3838 -m 16g omicone
 # then open http://localhost:3838 in your browser
 ```
 Upload your data through the browser (no volume mounting needed). Give Docker
@@ -178,7 +183,7 @@ pipeline is explorable offline with no data of your own.
   every module's outputs evaluate, and the package installs — but neither
   pipeline has been **run against a live install of its engine with real data**.
   A few scop and maftools argument names still need checking on first real run;
-  `OMICstudio:::wes_missing_api()` reports whether your installed maftools still
+  `OmicOne:::wes_missing_api()` reports whether your installed maftools still
   provides everything the WES modules call.
 - **`scop` is the plotting and compute engine** for the single-cell pipeline and
   is a GitHub package; if your machine blocks source builds, use the Docker

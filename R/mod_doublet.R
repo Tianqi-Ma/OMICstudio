@@ -112,7 +112,7 @@ mod_doublet_server <- function(id, rv, log_rv) {
     })
 
     output$summary <- shiny::renderUI({
-      if (is.na(res$before)) return(shiny::div(class = "omicstudio-placeholder",
+      if (is.na(res$before)) return(shiny::div(class = "omicone-placeholder",
                                                i18n("Pick a method and click Detect doublets.",
                                                     "选择一种方法后点击“检测双细胞”。")))
       pct <- if (res$before > 0) 100 * res$n_doublet / res$before else 0
@@ -139,7 +139,7 @@ mod_doublet_server <- function(id, rv, log_rv) {
                                    name = NULL) +
         ggplot2::labs(x = "Doublet score", y = "Cells",
                       title = "Doublet score distribution") +
-        omicstudio_theme()
+        omicone_theme()
     })
   })
 }

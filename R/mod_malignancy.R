@@ -90,7 +90,7 @@ mod_malignancy_server <- function(id, rv, log_rv) {
     output$ref_col_ui <- shiny::renderUI({
       cols <- if (is.null(rv$obj)) character(0) else obj_meta_cols(rv$obj)
       if (length(cols) == 0) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("No metadata yet — cluster or annotate first.",
                                "还没有元数据 —— 请先聚类或注释。")))
       }
@@ -202,7 +202,7 @@ mod_malignancy_server <- function(id, rv, log_rv) {
 
     output$summary <- shiny::renderUI({
       if (!isTRUE(res$cnv_done) && !isTRUE(res$stem_done)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Optional (cancer data). Run CNV or score stemness.",
                                "可选（癌症数据）。运行 CNV 或计算干性评分。")))
       }

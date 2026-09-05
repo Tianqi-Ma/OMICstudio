@@ -20,7 +20,7 @@ register_exports <- function(input, output, session, rv) {
 
   # 1. Full Seurat object (.rds)
   output$dl_rds <- shiny::downloadHandler(
-    filename = function() paste0("omicstudio_object_", stamp(), ".rds"),
+    filename = function() paste0("omicone_object_", stamp(), ".rds"),
     content = function(file) {
       if (!need_obj()) { saveRDS(NULL, file); return() }
       saveRDS(rv$obj, file)
@@ -29,7 +29,7 @@ register_exports <- function(input, output, session, rv) {
 
   # 2. Cell metadata (.csv)
   output$dl_meta <- shiny::downloadHandler(
-    filename = function() paste0("omicstudio_metadata_", stamp(), ".csv"),
+    filename = function() paste0("omicone_metadata_", stamp(), ".csv"),
     content = function(file) {
       if (!need_obj()) { utils::write.csv(data.frame(), file); return() }
       utils::write.csv(obj_meta(rv$obj), file, row.names = TRUE)
@@ -38,7 +38,7 @@ register_exports <- function(input, output, session, rv) {
 
   # 3. Expression matrix — sparse counts as .rds (keeps gene/cell names, compact)
   output$dl_matrix <- shiny::downloadHandler(
-    filename = function() paste0("omicstudio_counts_", stamp(), ".rds"),
+    filename = function() paste0("omicone_counts_", stamp(), ".rds"),
     content = function(file) {
       if (!need_obj()) { saveRDS(NULL, file); return() }
       m <- tryCatch(SeuratObject::LayerData(rv$obj, layer = "counts"),
@@ -51,7 +51,7 @@ register_exports <- function(input, output, session, rv) {
 
   # 4. Dimensional-reduction embeddings (.csv), all reductions side by side
   output$dl_embed <- shiny::downloadHandler(
-    filename = function() paste0("omicstudio_embeddings_", stamp(), ".csv"),
+    filename = function() paste0("omicone_embeddings_", stamp(), ".csv"),
     content = function(file) {
       if (!need_obj()) { utils::write.csv(data.frame(), file); return() }
       reds <- obj_reductions(rv$obj)

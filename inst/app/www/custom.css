@@ -1,5 +1,5 @@
 /* ============================================================================
-   OMICstudio — blue-cyan research theme. Dark by default, light via toggle.
+   OmicOne — blue-cyan research theme. Dark by default, light via toggle.
    ========================================================================== */
 
 /* ---- design tokens ---- */
@@ -31,131 +31,137 @@
 body { background: var(--sc-bg); color: var(--sc-text); }
 
 /* ---- top bar ---- */
-.omicstudio-topbar {
+.omicone-topbar {
   display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 1rem;
 }
-.omicstudio-brand { display: inline-flex; align-items: baseline; gap: .5rem; }
-.omicstudio-brand strong { font-size: 1.1rem; letter-spacing: .01em; }
-.omicstudio-brand .omicstudio-sub { font-size: .72rem; color: var(--sc-muted); }
-.omicstudio-topright { display: inline-flex; align-items: center; gap: .8rem; }
+.omicone-brand { display: inline-flex; align-items: baseline; gap: .5rem; }
+.omicone-brand strong { font-size: 1.1rem; letter-spacing: .01em; }
+.omicone-brand .omicone-sub { font-size: .72rem; color: var(--sc-muted); }
+.omicone-topright { display: inline-flex; align-items: center; gap: .8rem; }
 
 /* segmented language control */
-.omicstudio-lang { display: inline-flex; border: 1px solid var(--sc-border); border-radius: 999px; overflow: hidden; }
-.omicstudio-lang-btn {
+.omicone-lang { display: inline-flex; border: 1px solid var(--sc-border); border-radius: 999px; overflow: hidden; }
+.omicone-lang-btn {
   border: 0; background: transparent; color: var(--sc-muted);
   padding: .2rem .7rem; font-size: .8rem; font-weight: 600; cursor: pointer;
 }
-.omicstudio-lang-btn.active { background: var(--sc-accent); color: #fff; }
+.omicone-lang-btn.active { background: var(--sc-accent); color: #fff; }
 
 /* python-env status dot */
-.omicstudio-pydot { display: inline-flex; align-items: center; gap: .35rem; font-size: .78rem; color: var(--sc-muted); }
-.omicstudio-pydot::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sc-muted); }
-.omicstudio-pydot.ready::before { background: var(--sc-ok); }
+.omicone-pydot { display: inline-flex; align-items: center; gap: .35rem; font-size: .78rem; color: var(--sc-muted); }
+.omicone-pydot::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sc-muted); }
+.omicone-pydot.ready::before { background: var(--sc-ok); }
 
 /* ---- left grouped stepper ---- */
-.omicstudio-nav { display: flex; flex-direction: column; gap: 1px; padding-right: 2px; }
-.omicstudio-phase {
+.omicone-nav { display: flex; flex-direction: column; gap: 1px; padding-right: 2px; }
+.omicone-phase {
   font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
   color: var(--sc-muted); margin: .8rem .2rem .25rem;
 }
-.omicstudio-phase:first-child { margin-top: .2rem; }
-.omicstudio-navitem {
+.omicone-phase:first-child { margin-top: .2rem; }
+.omicone-navitem {
   display: flex; align-items: center; gap: .5rem; position: relative;
   padding: .32rem .5rem .32rem .3rem; border-radius: .45rem; cursor: pointer;
   color: var(--sc-text); text-decoration: none; font-size: .88rem; border: 1px solid transparent;
 }
-.omicstudio-navitem:hover { background: color-mix(in srgb, var(--sc-accent) 10%, transparent); }
-.omicstudio-navnum { font-size: .7rem; color: var(--sc-muted); min-width: 1.4em; text-align: right; }
-.omicstudio-navdot {
+.omicone-navitem:hover { background: color-mix(in srgb, var(--sc-accent) 10%, transparent); }
+.omicone-navnum { font-size: .7rem; color: var(--sc-muted); min-width: 1.4em; text-align: right; }
+.omicone-navdot {
   width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto;
   background: transparent; border: 2px solid var(--sc-border);
 }
-.omicstudio-navitem.done  .omicstudio-navdot { background: var(--sc-accent); border-color: var(--sc-accent); }
-.omicstudio-navitem.done  { color: var(--sc-accent2); }
-.omicstudio-navitem.current {
+.omicone-navitem.done  .omicone-navdot { background: var(--sc-accent); border-color: var(--sc-accent); }
+.omicone-navitem.done  { color: var(--sc-accent2); }
+.omicone-navitem.current {
   background: color-mix(in srgb, var(--sc-accent) 18%, transparent);
   border-color: color-mix(in srgb, var(--sc-accent) 45%, transparent); font-weight: 600;
 }
-.omicstudio-navitem.current .omicstudio-navdot {
+.omicone-navitem.current .omicone-navdot {
   background: var(--sc-accent); border-color: var(--sc-accent2);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--sc-accent) 30%, transparent);
 }
-.omicstudio-navlabel { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.omicone-navlabel { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ---- step header ---- */
-.omicstudio-stephead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-.omicstudio-steptitle { font-weight: 700; font-size: 1.06rem; }
-.omicstudio-subtitle { color: var(--sc-muted); font-size: .82rem; }
-.omicstudio-summarystrip { display: inline-flex; gap: .4rem; flex-wrap: wrap; }
-.omicstudio-pill {
+.omicone-stephead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.omicone-steptitle { font-weight: 700; font-size: 1.06rem; }
+.omicone-subtitle { color: var(--sc-muted); font-size: .82rem; }
+.omicone-summarystrip { display: inline-flex; gap: .4rem; flex-wrap: wrap; }
+.omicone-pill {
   display: inline-flex; align-items: baseline; gap: .35rem;
   padding: .18rem .6rem; border-radius: 999px;
   background: color-mix(in srgb, var(--sc-accent) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--sc-accent) 30%, transparent); font-size: .8rem;
 }
-.omicstudio-pill-label { color: var(--sc-muted); }
-.omicstudio-pill-value { font-weight: 700; }
+.omicone-pill-label { color: var(--sc-muted); }
+.omicone-pill-value { font-weight: 700; }
 
 /* ---- plot-first main area ---- */
-.omicstudio-step { height: 100%; background: var(--sc-card); border: 1px solid var(--sc-border); box-shadow: var(--sc-elev); }
-.omicstudio-plotwrap { min-height: 64vh; height: 100%; display: flex; flex-direction: column; }
-.omicstudio-plotwrap > * { flex: 1 1 auto; min-height: 0; }
+.omicone-step { height: 100%; background: var(--sc-card); border: 1px solid var(--sc-border); box-shadow: var(--sc-elev); }
+.omicone-plotwrap { min-height: 64vh; height: 100%; display: flex; flex-direction: column; }
+.omicone-plotwrap > * { flex: 1 1 auto; min-height: 0; }
 
 /* ---- explainer ---- */
-.omicstudio-explainer .accordion-button { font-weight: 600; color: var(--sc-accent2); }
-.omicstudio-example {
+.omicone-explainer .accordion-button { font-weight: 600; color: var(--sc-accent2); }
+.omicone-example {
   margin-top: .5rem; padding: .55rem .7rem;
   background: color-mix(in srgb, var(--sc-accent) 9%, transparent);
   border-left: 3px solid var(--sc-accent); border-radius: .3rem; font-size: .9rem;
 }
-.omicstudio-example-tag { font-size: .68rem; font-weight: 700; text-transform: uppercase; color: var(--sc-accent2); margin-right: .4rem; }
+.omicone-example-tag { font-size: .68rem; font-weight: 700; text-transform: uppercase; color: var(--sc-accent2); margin-right: .4rem; }
 
 /* ---- controls ---- */
-.omicstudio-label { font-weight: 600; margin: .55rem 0 .2rem; display: block; }
-.omicstudio-help {
+.omicone-label { font-weight: 600; margin: .55rem 0 .2rem; display: block; }
+.omicone-help {
   display: inline-flex; align-items: center; justify-content: center;
   width: 1.05rem; height: 1.05rem; margin-left: .35rem;
   font-size: .72rem; font-weight: 700; color: #fff; background: var(--sc-muted); border-radius: 50%; cursor: help;
 }
-.omicstudio-run { margin-top: .9rem; }
-.omicstudio-note {
+.omicone-run { margin-top: .9rem; }
+.omicone-note {
   margin: .4rem 0; padding: .45rem .55rem; font-size: .8rem; color: var(--sc-muted);
   background: var(--sc-panel); border: 1px solid var(--sc-border); border-radius: .35rem;
 }
 
 /* ---- sidebar status ---- */
-.omicstudio-statline { display: flex; justify-content: space-between; padding: .12rem 0; font-size: .82rem; }
-.omicstudio-statlabel { color: var(--sc-muted); }
-.omicstudio-statvalue { font-weight: 600; }
-.omicstudio-warn {
+.omicone-statline { display: flex; justify-content: space-between; padding: .12rem 0; font-size: .82rem; }
+.omicone-statlabel { color: var(--sc-muted); }
+.omicone-statvalue { font-weight: 600; }
+.omicone-warn {
   margin-top: .5rem; padding: .45rem .55rem; font-size: .78rem;
   background: color-mix(in srgb, #f0ad4e 16%, transparent);
   border: 1px solid color-mix(in srgb, #f0ad4e 42%, transparent); border-radius: .35rem;
 }
-.omicstudio-placeholder {
+.omicone-placeholder {
   padding: 2rem; text-align: center; color: var(--sc-muted);
   background: var(--sc-panel); border: 1px dashed var(--sc-border); border-radius: .5rem;
 }
 /* "nothing here yet" line in the sidebar (no data / no omics chosen) */
-.omicstudio-status-empty {
+.omicone-status-empty {
   padding: .55rem .1rem; font-size: .8rem; color: var(--sc-muted); font-style: italic;
 }
 /* compact wrapper for the sidebar's dataset readout */
-.omicstudio-mini { font-size: .82rem; line-height: 1.35; }
+.omicone-mini { font-size: .82rem; line-height: 1.35; }
 /* availability badge on the landing-page omics cards */
-.omicstudio-ombadge {
+.omicone-ombadge {
   display: inline-block; margin-top: .6rem; padding: .1rem .5rem;
   font-size: .68rem; letter-spacing: .05em; text-transform: uppercase;
   border-radius: 1rem; color: var(--sc-muted);
   border: 1px solid var(--sc-border); background: var(--sc-panel);
 }
-.omicstudio-ombadge.ready {
+.omicone-ombadge.ready {
   color: var(--sc-ok);
   border-color: color-mix(in srgb, var(--sc-ok) 45%, transparent);
   background: color-mix(in srgb, var(--sc-ok) 12%, transparent);
 }
+/* the recorded-steps list on the Report and Export previews */
+.omicone-steps { padding-left: 1.2rem; margin: 0; font-size: .88rem; line-height: 1.7; }
+.omicone-steps li { padding: .1rem 0; }
+.omicone-muted { color: var(--sc-muted); font-size: .82rem; }
+/* results table sitting under a preview plot */
+.omicone-table { margin-top: .8rem; font-size: .85rem; }
 /* which step a "coming soon" card belongs to */
-.omicstudio-placeholder-step {
+.omicone-placeholder-step {
   display: inline-block; margin-bottom: .6rem; padding: .15rem .5rem;
   font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
   color: var(--sc-accent2); border: 1px solid var(--sc-border);
@@ -163,46 +169,46 @@ body { background: var(--sc-bg); color: var(--sc-text); }
 }
 
 /* ---- startup splash ---- */
-#omicstudio-splash {
+#omicone-splash {
   position: fixed; inset: 0; z-index: 9999; background: var(--sc-bg);
   display: flex; align-items: center; justify-content: center;
   transition: opacity .55s ease; opacity: 1;
 }
-#omicstudio-splash.hide { opacity: 0; }
-#omicstudio-splash-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-#omicstudio-splash-logo {
+#omicone-splash.hide { opacity: 0; }
+#omicone-splash-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+#omicone-splash-logo {
   position: relative; z-index: 1; text-align: center;
   opacity: 0; transform: translateY(8px); transition: opacity .6s ease, transform .6s ease;
 }
-#omicstudio-splash-logo.show { opacity: 1; transform: translateY(0); }
-#omicstudio-splash-logo .t {
+#omicone-splash-logo.show { opacity: 1; transform: translateY(0); }
+#omicone-splash-logo .t {
   font-size: 2.6rem; font-weight: 800; letter-spacing: .01em;
   background: linear-gradient(90deg, #4f9fd0, #3fb37f); -webkit-background-clip: text;
   background-clip: text; color: transparent;
 }
-#omicstudio-splash-logo .s { color: var(--sc-muted); font-size: .9rem; margin-top: .25rem; }
+#omicone-splash-logo .s { color: var(--sc-muted); font-size: .9rem; margin-top: .25rem; }
 
 /* ---- omics landing page ---- */
-.omicstudio-switch { color: var(--sc-muted); text-decoration: none; font-size: .85rem; margin-right: .3rem; }
-.omicstudio-switch:hover { color: var(--sc-accent2); }
-.omicstudio-landing { max-width: 1100px; margin: 1.5rem auto; padding: 0 1rem; }
-.omicstudio-landing-head { text-align: center; margin-bottom: 1.4rem; }
-.omicstudio-omgrid {
+.omicone-switch { color: var(--sc-muted); text-decoration: none; font-size: .85rem; margin-right: .3rem; }
+.omicone-switch:hover { color: var(--sc-accent2); }
+.omicone-landing { max-width: 1100px; margin: 1.5rem auto; padding: 0 1rem; }
+.omicone-landing-head { text-align: center; margin-bottom: 1.4rem; }
+.omicone-omgrid {
   display: grid; gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
-.omicstudio-omcard {
+.omicone-omcard {
   position: relative; overflow: hidden; cursor: pointer;
   border: 1px solid var(--sc-border); border-radius: .8rem; background: var(--sc-card);
   min-height: 190px; box-shadow: var(--sc-elev); transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
-.omicstudio-omcard:hover {
+.omicone-omcard:hover {
   transform: translateY(-3px); border-color: var(--sc-accent);
   box-shadow: 0 6px 20px color-mix(in srgb, var(--sc-accent) 25%, transparent);
 }
-.omicstudio-omcanvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .18; pointer-events: none; }
-.omicstudio-omcard:hover .omicstudio-omcanvas { opacity: .45; }
-.omicstudio-omcard-body { position: relative; z-index: 1; padding: 1.1rem 1.2rem; }
-.omicstudio-omicon { font-size: 1.6rem; color: var(--sc-accent2); margin-bottom: .5rem; }
-.omicstudio-omtitle { font-weight: 700; font-size: 1.05rem; margin-bottom: .3rem; }
-.omicstudio-omdesc { color: var(--sc-muted); font-size: .85rem; line-height: 1.4; }
+.omicone-omcanvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .18; pointer-events: none; }
+.omicone-omcard:hover .omicone-omcanvas { opacity: .45; }
+.omicone-omcard-body { position: relative; z-index: 1; padding: 1.1rem 1.2rem; }
+.omicone-omicon { font-size: 1.6rem; color: var(--sc-accent2); margin-bottom: .5rem; }
+.omicone-omtitle { font-weight: 700; font-size: 1.05rem; margin-bottom: .3rem; }
+.omicone-omdesc { color: var(--sc-muted); font-size: .85rem; line-height: 1.4; }

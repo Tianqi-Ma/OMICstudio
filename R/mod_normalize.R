@@ -96,7 +96,7 @@ mod_normalize_server <- function(id, rv, log_rv) {
     })
 
     output$summary <- shiny::renderUI({
-      if (!isTRUE(res$done)) return(shiny::div(class = "omicstudio-placeholder",
+      if (!isTRUE(res$done)) return(shiny::div(class = "omicone-placeholder",
                                                i18n("Pick a method and click Normalize.",
                                                     "选择一种方法并点击归一化。")))
       bslib::layout_columns(
@@ -123,7 +123,7 @@ mod_normalize_server <- function(id, rv, log_rv) {
         ggplot2::geom_histogram(bins = 50, fill = sc_palette(1), alpha = 0.85) +
         ggplot2::labs(x = "Library size (log10 UMIs)", y = "Cells",
                       title = "Per-cell sequencing depth / 每个细胞的测序深度") +
-        omicstudio_theme()
+        omicone_theme()
     })
   })
 }

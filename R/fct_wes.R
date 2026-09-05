@@ -58,7 +58,7 @@ wes_missing_api <- function() {
 #' The "no MAF yet" placeholder every WES step shows before Import has run
 #' @keywords internal
 wes_no_maf <- function() {
-  shiny::div(class = "omicstudio-placeholder",
+  shiny::div(class = "omicone-placeholder",
              i18n("Load a MAF file on the <b>Import MAF</b> step first.",
                   "请先在<b>导入 MAF</b> 步骤加载 MAF 文件。"))
 }
@@ -67,7 +67,7 @@ wes_no_maf <- function() {
 #' @param en,zh Prompt text.
 #' @keywords internal
 wes_prompt <- function(en, zh) {
-  shiny::div(class = "omicstudio-placeholder", i18n(en, zh))
+  shiny::div(class = "omicone-placeholder", i18n(en, zh))
 }
 
 # ---- input ------------------------------------------------------------------

@@ -1,10 +1,10 @@
 #!/bin/sh
-# Compare OMICstudio's R/ against scStudio's, ignoring the package-name rename.
+# Compare OmicOne's R/ against scStudio's, ignoring the package-name rename.
 #
 # The two repos share their single-cell code; only the multi-omics shell and the
 # WES pipeline are meant to differ. A shared file that shows up here is a sync
 # that was missed -- which is exactly how a call to `scstudio_theme()` survived
-# in OMICstudio's fct_overview.R and broke the Import overview at runtime.
+# in OmicOne's fct_overview.R and broke the Import overview at runtime.
 #
 # Usage:  tools/check_mirror.sh [path-to-scStudio]
 # Exit:   0 = only the expected files differ, 1 = an unexpected divergence.
@@ -30,7 +30,7 @@ trap 'rm -rf "$tmp"' EXIT
 mkdir -p "$tmp/o" "$tmp/s"
 
 normalise() {
-  perl -pe 's/OMICstudio/XSTUDIOX/g; s/omicstudio/xstudiox/g;
+  perl -pe 's/OmicOne/XSTUDIOX/g; s/omicone/xstudiox/g;
             s/scStudio/XSTUDIOX/g;  s/scstudio/xstudiox/g' "$1"
 }
 for f in "$OMIC"/R/*.R; do normalise "$f" > "$tmp/o/$(basename "$f")"; done
@@ -49,7 +49,7 @@ if [ -s "$tmp/report" ]; then
   cat "$tmp/report"
   echo
   echo "Shared files must stay identical apart from the package name."
-  echo "Sync with:  perl -pe 's/OMICstudio/scStudio/g; s/omicstudio/scstudio/g'"
+  echo "Sync with:  perl -pe 's/OmicOne/scStudio/g; s/omicone/scstudio/g'"
   status=1
 else
   echo "Mirror OK: only the expected files differ."

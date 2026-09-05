@@ -9,33 +9,33 @@
 app_landing <- function() {
   cards <- lapply(omics_catalogue(), function(o) {
     shiny::tags$div(
-      class = "omicstudio-omcard",
+      class = "omicone-omcard",
       `data-omics` = o$v,
       `data-anim` = o$anim,
       onclick = sprintf("Shiny.setInputValue('omics','%s',{priority:'event'})", o$v),
       tabindex = "0",
-      shiny::tags$canvas(class = "omicstudio-omcanvas"),
+      shiny::tags$canvas(class = "omicone-omcanvas"),
       shiny::div(
-        class = "omicstudio-omcard-body",
-        shiny::div(class = "omicstudio-omicon", shiny::icon(o$icon)),
-        shiny::div(class = "omicstudio-omtitle", i18n(o$en, o$zh)),
-        shiny::div(class = "omicstudio-omdesc", i18n(o$desc_en, o$desc_zh)),
+        class = "omicone-omcard-body",
+        shiny::div(class = "omicone-omicon", shiny::icon(o$icon)),
+        shiny::div(class = "omicone-omtitle", i18n(o$en, o$zh)),
+        shiny::div(class = "omicone-omdesc", i18n(o$desc_en, o$desc_zh)),
         # say up front which pipelines actually run, rather than letting the
         # user discover it by clicking into a wall of placeholders
         if (isTRUE(o$ready))
-          shiny::div(class = "omicstudio-ombadge ready", i18n("Available", "已可用"))
+          shiny::div(class = "omicone-ombadge ready", i18n("Available", "已可用"))
         else
-          shiny::div(class = "omicstudio-ombadge", i18n("Planned", "规划中"))
+          shiny::div(class = "omicone-ombadge", i18n("Planned", "规划中"))
       )
     )
   })
   shiny::div(
-    class = "omicstudio-landing",
-    shiny::div(class = "omicstudio-landing-head",
+    class = "omicone-landing",
+    shiny::div(class = "omicone-landing-head",
                shiny::h3(i18n("Choose an analysis", "选择分析类型")),
                shiny::p(class = "text-muted",
                         i18n("Pick the omics data type to start. Hover a card to preview.",
                              "选择要分析的组学数据类型开始。悬停卡片可预览动画。"))),
-    shiny::div(class = "omicstudio-omgrid", cards)
+    shiny::div(class = "omicone-omgrid", cards)
   )
 }

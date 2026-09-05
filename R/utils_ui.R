@@ -1,4 +1,4 @@
-#' Reusable UI building blocks for OMICstudio
+#' Reusable UI building blocks for OmicOne
 #'
 #' These helpers implement the uniform per-step interaction pattern used by every
 #' analysis module. The layout is plot-first: a persistent narrow control rail on
@@ -53,14 +53,14 @@ explainer_card <- function(title, what, why, how = NULL, example = NULL,
     bi(how,  "How",  "怎么用"),
     if (!is.null(example)) {
       ex <- if (is.list(example)) example else list(en = example, zh = example)
-      shiny::div(class = "omicstudio-example",
-                 shiny::tags$span(class = "omicstudio-example-tag",
+      shiny::div(class = "omicone-example",
+                 shiny::tags$span(class = "omicone-example-tag",
                                   i18n("Example", "示例")),
                  i18n(ex$en, ex$zh))
     }
   )
   bslib::accordion(
-    class = "omicstudio-explainer", open = open,
+    class = "omicone-explainer", open = open,
     bslib::accordion_panel(
       title = i18n(paste0("\U0001F4A1 What is this step?"),
                    paste0("\U0001F4A1 这一步是什么？")),
@@ -74,7 +74,7 @@ explainer_card <- function(title, what, why, how = NULL, example = NULL,
 #' @param en,zh Tooltip text.
 #' @keywords internal
 help_tip <- function(en, zh = en) {
-  bslib::tooltip(shiny::tags$span(class = "omicstudio-help", "?"),
+  bslib::tooltip(shiny::tags$span(class = "omicone-help", "?"),
                  i18n(en, zh), placement = "right")
 }
 
@@ -82,7 +82,7 @@ help_tip <- function(en, zh = en) {
 #' @param label_en,label_zh Label text. @param tip_en,tip_zh Tooltip text.
 #' @keywords internal
 label_with_help <- function(label_en, tip_en, label_zh = label_en, tip_zh = tip_en) {
-  shiny::tags$label(class = "omicstudio-label",
+  shiny::tags$label(class = "omicone-label",
                     i18n(label_en, label_zh), help_tip(tip_en, tip_zh))
 }
 
@@ -99,11 +99,11 @@ step_container <- function(title, explainer, controls, summary, preview,
                            rail_width = "280px") {
   ttl <- if (is.list(title)) i18n(title$en, title$zh) else title
   bslib::card(
-    class = "omicstudio-step", full_screen = TRUE,
+    class = "omicone-step", full_screen = TRUE,
     bslib::card_header(
-      shiny::div(class = "omicstudio-stephead",
-                 shiny::span(class = "omicstudio-steptitle", ttl),
-                 shiny::div(class = "omicstudio-summarystrip", summary))
+      shiny::div(class = "omicone-stephead",
+                 shiny::span(class = "omicone-steptitle", ttl),
+                 shiny::div(class = "omicone-summarystrip", summary))
     ),
     bslib::layout_sidebar(
       sidebar = bslib::sidebar(
@@ -111,7 +111,7 @@ step_container <- function(title, explainer, controls, summary, preview,
         if (!is.null(explainer)) explainer,
         controls
       ),
-      shiny::div(class = "omicstudio-plotwrap", preview)
+      shiny::div(class = "omicone-plotwrap", preview)
     )
   )
 }
@@ -131,7 +131,7 @@ run_button <- function(id, en = "Run this step", zh = "运行此步骤") {
     label = i18n(en, zh),
     label_busy = i18n("Running…", "运行中…"),
     icon = shiny::icon("play"),
-    class = "btn-primary omicstudio-run w-100"
+    class = "btn-primary omicone-run w-100"
   )
 }
 
@@ -139,7 +139,7 @@ run_button <- function(id, en = "Run this step", zh = "运行此步骤") {
 #' @param title,value Character/numeric.
 #' @keywords internal
 stat_tile <- function(title, value, showcase = NULL) {
-  shiny::div(class = "omicstudio-pill",
-             shiny::span(class = "omicstudio-pill-label", title),
-             shiny::span(class = "omicstudio-pill-value", value))
+  shiny::div(class = "omicone-pill",
+             shiny::span(class = "omicone-pill-label", title),
+             shiny::span(class = "omicone-pill-value", value))
 }

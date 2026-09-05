@@ -1,8 +1,8 @@
 ---
-title: "Getting started with OMICstudio"
+title: "Getting started with OmicOne"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting started with OMICstudio}
+  %\VignetteIndexEntry{Getting started with OmicOne}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -11,9 +11,9 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", eval = FALSE)
 ```
 
-## What OMICstudio is
+## What OmicOne is
 
-OMICstudio is a local, browser-based app for interactive multi-omics analysis.
+OmicOne is a local, browser-based app for interactive multi-omics analysis.
 You launch it with one command; it opens in your browser and runs all computation
 on your own machine.
 
@@ -25,7 +25,7 @@ multi-omics integration show their planned steps and are not implemented yet.
 ## Launch it
 
 ```{r}
-OMICstudio::run_app()
+OmicOne::run_app()
 ```
 
 This starts a local server and opens the app. Nothing is uploaded to any remote
@@ -120,7 +120,7 @@ BiocManager::install("maftools")
 
 Only the signature step needs more: a `BSgenome` package for the reference build
 and `NMF`. If your installed maftools has drifted from what the modules call,
-`OMICstudio:::wes_missing_api()` lists exactly what is missing.
+`OmicOne:::wes_missing_api()` lists exactly what is missing.
 
 ## Sharing one cohort between pipelines
 

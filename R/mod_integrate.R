@@ -64,7 +64,7 @@ mod_integrate_server <- function(id, rv, log_rv) {
     output$batch_ui <- shiny::renderUI({
       cols <- obj_meta_cols(rv$obj)
       if (length(cols) == 0) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Load a dataset to choose a batch column.",
                                "加载数据集以选择批次列。")))
       }
@@ -101,7 +101,7 @@ mod_integrate_server <- function(id, rv, log_rv) {
 
     output$summary <- shiny::renderUI({
       if (!isTRUE(res$done)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Choose a batch column and method, then click Run integration.",
                                "选择批次列和方法，然后点击运行整合。")))
       }
@@ -142,7 +142,7 @@ mod_integrate_server <- function(id, rv, log_rv) {
                                      name = batch) +
         ggplot2::labs(x = paste0(reduction, " 1"), y = paste0(reduction, " 2"),
                       title = "Batch mixing after integration / 整合后的批次混合") +
-        omicstudio_theme()
+        omicone_theme()
     })
   })
 }

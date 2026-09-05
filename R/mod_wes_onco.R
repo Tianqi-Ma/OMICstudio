@@ -78,7 +78,7 @@ mod_wes_onco_server <- function(id, rv, log_rv) {
       shiny::req(rv$maf)
       cols <- wes_clinical_cols(rv$maf)
       if (!length(cols)) {
-        return(shiny::div(class = "omicstudio-status-empty",
+        return(shiny::div(class = "omicone-status-empty",
                           i18n("No clinical columns attached to this MAF.",
                                "该 MAF 未附带临床列。")))
       }

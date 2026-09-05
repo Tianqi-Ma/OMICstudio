@@ -1,4 +1,29 @@
-# OMICstudio 0.5.0
+# OmicOne 0.6.0
+
+Renamed from **OMICstudio** to **OmicOne**.
+
+The old name collided with [OmicStudio](https://www.omicstudio.cn), an
+established cloud analysis platform — confusing in general, and especially so
+here, since this project is the opposite thing: everything runs on your own
+machine and nothing is uploaded. No functionality changed in this release; it is
+the rename and nothing else.
+
+What this means for you:
+
+- The package is now `OmicOne`: `OmicOne::run_app()`,
+  `remotes::install_github("Tianqi-Ma/OmicOne")`.
+- The repository moved to `Tianqi-Ma/OmicOne`. GitHub redirects the old URL, and
+  an existing clone keeps working, but update your remote:
+  `git remote set-url origin git@github.com:Tianqi-Ma/OmicOne.git`
+- If you had the old package installed, remove it:
+  `remove.packages("OMICstudio")`.
+- Exported filenames now start with `omicone_` instead of `omicstudio_`.
+
+Release notes below 0.6.0 were published under the old name.
+
+---
+
+# OmicOne 0.5.0
 
 The WES / somatic mutation pipeline. Two of the five pipelines are now complete.
 
@@ -45,9 +70,9 @@ The WES / somatic mutation pipeline. Two of the five pipelines are now complete.
 
 ---
 
-# OMICstudio 0.4.0
+# OmicOne 0.4.0
 
-Multi-omics suite. OMICstudio grew out of
+Multi-omics suite. OmicOne grew out of
 [scStudio](https://github.com/Tianqi-Ma/scStudio) (single-cell only), which is
 still maintained standalone; shared changes are mirrored between the two.
 

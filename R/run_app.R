@@ -1,11 +1,11 @@
-#' Launch the OMICstudio interactive analysis app
+#' Launch the OmicOne interactive analysis app
 #'
 #' Starts a local Shiny server and (by default) opens it in your browser. All
 #' computation runs on your own machine; nothing is uploaded to any server.
 #'
 #' Typical use:
 #' \preformatted{
-#'   OMICstudio::run_app()
+#'   OmicOne::run_app()
 #' }
 #'
 #' @param launch.browser Logical; open the app in a browser automatically.
@@ -25,11 +25,11 @@ run_app <- function(launch.browser = TRUE,
   old <- options(shiny.maxRequestSize = max_upload_mb * 1024^2)
   on.exit(options(old), add = TRUE)
 
-  # Serve the package's static assets (CSS/JS) at /omicstudio/... Without this the
+  # Serve the package's static assets (CSS/JS) at /omicone/... Without this the
   # stylesheet 404s and the app renders unstyled.
   www <- app_sys("app", "www")
   if (nzchar(www) && dir.exists(www)) {
-    shiny::addResourcePath("omicstudio", www)
+    shiny::addResourcePath("omicone", www)
   }
 
   app <- shiny::shinyApp(ui = app_ui, server = app_server)
@@ -40,5 +40,5 @@ run_app <- function(launch.browser = TRUE,
 #' @param ... Path components under inst/.
 #' @keywords internal
 app_sys <- function(...) {
-  system.file(..., package = "OMICstudio")
+  system.file(..., package = "OmicOne")
 }

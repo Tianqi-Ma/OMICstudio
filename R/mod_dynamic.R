@@ -103,7 +103,7 @@ mod_dynamic_server <- function(id, rv, log_rv) {
 
     output$summary <- shiny::renderUI({
       if (!isTRUE(res$done)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Run a trajectory step first, then detect dynamic features.",
                                "请先运行轨迹步骤，然后检测动态特征。")))
       }

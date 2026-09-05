@@ -16,7 +16,7 @@ NULL
 
 #' Shared minimal ggplot theme (fallback when not using a scop plot)
 #' @keywords internal
-omicstudio_theme <- function() {
+omicone_theme <- function() {
   ggplot2::theme_minimal(base_size = 13) +
     ggplot2::theme(
       panel.grid.minor = ggplot2::element_blank(),
@@ -63,7 +63,7 @@ render_scop_plot <- function(plot_expr) {
     p <- tryCatch(
       plot_expr(),
       shiny.silent.error = function(e) NULL,
-      error = function(e) structure(list(msg = conditionMessage(e)), class = "omicstudio_plot_error"))
+      error = function(e) structure(list(msg = conditionMessage(e)), class = "omicone_plot_error"))
     shiny::req(!is.null(p))
 
     # Draw it. Any drawing error is turned into a readable message ON the canvas
@@ -74,7 +74,7 @@ render_scop_plot <- function(plot_expr) {
       graphics::plot.new()
       graphics::text(0.5, 0.5, paste0("Plot error:\n", msg), col = "#c1476b", cex = 1.1)
     }
-    if (inherits(p, "omicstudio_plot_error")) { show_err(p$msg); return(invisible()) }
+    if (inherits(p, "omicone_plot_error")) { show_err(p$msg); return(invisible()) }
     tryCatch({
       if (methods::is(p, "Heatmap") || methods::is(p, "HeatmapList")) {
         if (has_pkg("ComplexHeatmap")) ComplexHeatmap::draw(p) else print(p)

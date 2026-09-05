@@ -9,10 +9,10 @@ test_that("app_ui builds and renders to HTML", {
   expect_true(nchar(html) > 2000)
   # chrome: stylesheet + script served from the registered resource path,
   # the splash overlay, the language switch, and the bilingual data attributes
-  expect_match(html, "omicstudio/custom.css", fixed = TRUE)
-  expect_match(html, "omicstudio/app.js", fixed = TRUE)
-  expect_match(html, "omicstudio-splash", fixed = TRUE)
-  expect_match(html, "OMICstudioSetLang", fixed = TRUE)
+  expect_match(html, "omicone/custom.css", fixed = TRUE)
+  expect_match(html, "omicone/app.js", fixed = TRUE)
+  expect_match(html, "omicone-splash", fixed = TRUE)
+  expect_match(html, "OmicOneSetLang", fixed = TRUE)
   expect_match(html, "data-zh=", fixed = TRUE)
 })
 
@@ -39,7 +39,7 @@ test_that("omics catalogue matches the step registries", {
 
 test_that("landing page renders", {
   html <- as.character(app_landing())
-  expect_match(html, "omicstudio-omcard", fixed = TRUE)
+  expect_match(html, "omicone-omcard", fixed = TRUE)
   expect_match(html, "data-anim", fixed = TRUE)
 })
 

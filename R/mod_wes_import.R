@@ -143,7 +143,7 @@ mod_wes_import_server <- function(id, rv, log_rv) {
     output$summary <- shiny::renderUI({
       maf <- rv$maf
       if (is.null(maf)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("No MAF yet. Tip: keep <b>Demo data</b> selected and click <b>Load MAF</b> to try it instantly.",
                                "尚无 MAF。提示：保持选中<b>演示数据</b>并点击<b>加载 MAF</b> 即可立即试用。")))
       }

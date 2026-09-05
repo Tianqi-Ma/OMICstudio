@@ -13,12 +13,12 @@ mod_placeholder_ui <- function(id) {
   ns <- shiny::NS(id)
   lab <- step_label(id)
   bslib::card(
-    class = "omicstudio-step", full_screen = TRUE,
+    class = "omicone-step", full_screen = TRUE,
     bslib::card_body(
       shiny::div(
-        class = "omicstudio-placeholder", style = "margin:auto; max-width:520px;",
+        class = "omicone-placeholder", style = "margin:auto; max-width:520px;",
         shiny::div(style = "font-size:2rem; margin-bottom:.5rem;", "\U0001F6A7"),
-        shiny::div(class = "omicstudio-placeholder-step", i18n(lab$en, lab$zh)),
+        shiny::div(class = "omicone-placeholder-step", i18n(lab$en, lab$zh)),
         shiny::h4(i18n("Coming soon", "即将推出")),
         shiny::p(i18n(
           "This analysis step is planned and will be added in an upcoming release.",

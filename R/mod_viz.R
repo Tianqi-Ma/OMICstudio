@@ -135,24 +135,24 @@ mod_viz_server <- function(id, rv, log_rv) {
               if (!is.null(p)) return(p)
             }
             Seurat::DimPlot(obj, reduction = red, group.by = input$meta_col) +
-              omicstudio_theme()
+              omicone_theme()
           },
           feature = {
             shiny::validate(shiny::need(length(genes) > 0, "Enter at least one gene."))
             shiny::validate(shiny::need(length(red) && !is.na(red),
                                         "No UMAP/embedding found. Run an embedding first."))
             Seurat::FeaturePlot(obj, features = genes, reduction = red) &
-              omicstudio_theme()
+              omicone_theme()
           },
           violin = {
             shiny::validate(shiny::need(length(genes) > 0, "Enter at least one gene."))
             Seurat::VlnPlot(obj, features = genes, group.by = input$meta_col) &
-              omicstudio_theme()
+              omicone_theme()
           },
           dotplot = {
             shiny::validate(shiny::need(length(genes) > 0, "Enter at least one gene."))
             Seurat::DotPlot(obj, features = genes, group.by = input$meta_col) +
-              omicstudio_theme()
+              omicone_theme()
           },
           heatmap = {
             shiny::validate(shiny::need(length(genes) > 0, "Enter at least one gene."))
@@ -196,7 +196,7 @@ mod_viz_server <- function(id, rv, log_rv) {
     output$summary <- shiny::renderUI({
       obj <- rv$obj
       if (is.null(obj)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Load and process data first, then explore it here.",
                                "请先加载并处理数据，然后在此探索。")))
       }
@@ -211,7 +211,7 @@ mod_viz_server <- function(id, rv, log_rv) {
     })
 
     output$download <- shiny::downloadHandler(
-      filename = function() paste0("omicstudio_", input$ptype, "_",
+      filename = function() paste0("omicone_", input$ptype, "_",
                                    format(Sys.time(), "%Y%m%d_%H%M%S"), ".", input$fmt),
       content = function(file) {
         gg <- current_plot()

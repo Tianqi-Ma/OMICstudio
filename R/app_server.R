@@ -41,7 +41,7 @@ app_server <- function(input, output, session) {
   # Left navigator: grouped, status-coloured; empty on the landing page.
   output$step_nav <- shiny::renderUI({
     if (is.null(rv$omics)) {
-      return(shiny::div(class = "omicstudio-status-empty",
+      return(shiny::div(class = "omicone-status-empty",
                         i18n("Pick an analysis to begin.", "选择一个分析开始。")))
     }
     current <- input$steps %||% steps_for(rv$omics)[[1]]$v
@@ -52,27 +52,27 @@ app_server <- function(input, output, session) {
     for (ph in phase_order_for(rv$omics)) {
       lab <- phases[[ph]]
       children[[length(children) + 1]] <-
-        shiny::div(class = "omicstudio-phase", i18n(lab$en, lab$zh))
+        shiny::div(class = "omicone-phase", i18n(lab$en, lab$zh))
       for (s in Filter(function(x) identical(x$phase, ph), steps)) {
         state <- if (identical(s$v, current)) "current"
                  else if (isTRUE(status[[s$v]])) "done" else "todo"
         children[[length(children) + 1]] <- shiny::tags$a(
-          class = paste("omicstudio-navitem", state),
+          class = paste("omicone-navitem", state),
           onclick = sprintf("Shiny.setInputValue('goto','%s',{priority:'event'})", s$v),
-          shiny::span(class = "omicstudio-navdot"),
-          shiny::span(class = "omicstudio-navnum", s$n),
-          shiny::span(class = "omicstudio-navlabel", i18n(s$en, s$zh))
+          shiny::span(class = "omicone-navdot"),
+          shiny::span(class = "omicone-navnum", s$n),
+          shiny::span(class = "omicone-navlabel", i18n(s$en, s$zh))
         )
       }
     }
-    shiny::div(class = "omicstudio-nav", children)
+    shiny::div(class = "omicone-nav", children)
   })
 
   shiny::observeEvent(input$goto, { bslib::nav_select("steps", input$goto) })
 
   # --- Dataset status (bottom of sidebar), for the active omics --------------
   output$global_status <- shiny::renderUI({
-    empty <- function() shiny::div(class = "omicstudio-status-empty",
+    empty <- function() shiny::div(class = "omicone-status-empty",
                                    i18n("No data loaded.", "尚未加载数据"))
     cohort <- if (!is.null(rv$clinical) && nrow(rv$clinical))
       stat_line(i18n("Cohort", "队列"),
@@ -98,7 +98,7 @@ app_server <- function(input, output, session) {
       stat_line(i18n("Genes", "基因"), format(dims$genes, big.mark = ",")),
       cohort,
       if (nzchar(advice))
-        shiny::div(class = "omicstudio-warn", shiny::icon("triangle-exclamation"), " ", advice)
+        shiny::div(class = "omicone-warn", shiny::icon("triangle-exclamation"), " ", advice)
     )
   })
 
@@ -159,7 +159,7 @@ mark_done <- function(rv, step) {
 #' Small labelled status line for the sidebar
 #' @keywords internal
 stat_line <- function(label, value) {
-  shiny::div(class = "omicstudio-statline",
-             shiny::span(class = "omicstudio-statlabel", label),
-             shiny::span(class = "omicstudio-statvalue", value))
+  shiny::div(class = "omicone-statline",
+             shiny::span(class = "omicone-statlabel", label),
+             shiny::span(class = "omicone-statvalue", value))
 }

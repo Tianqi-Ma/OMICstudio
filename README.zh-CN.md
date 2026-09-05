@@ -1,4 +1,4 @@
-# OMICstudio
+# OmicOne
 
 > 🌐 **语言：** **中文** · [English README](README.md)
 
@@ -14,7 +14,12 @@
 - 🧾 **可复现日志**，可导出成 R 脚本或叙述式报告
 - 🌗 深色 / 浅色主题，English / 中文 —— 顶栏一键切换
 
-> **当前状态（v0.5.0）：** **单细胞 RNA-seq**（21 步）与 **WES / 体细胞突变**（12 步）
+> **已改名：** 本项目在 v0.5.0 之前叫 **OMICstudio**。该名字与
+> [OmicStudio](https://www.omicstudio.cn)（一个已有的在线分析平台）重名——对一个
+> 主打「数据不离开你的机器」的工具来说，这个撞名尤其容易误导。代码不变，只是换名，
+> 详见 [NEWS.md](NEWS.md)。
+
+> **当前状态（v0.6.0）：** **单细胞 RNA-seq**（21 步）与 **WES / 体细胞突变**（12 步）
 > 两条流程均已完整并通过静态校验。其余三个组学在界面中展示规划路线图，尚未实现。
 > 两条流程都**还没有在装好各自引擎的环境里端到端实跑过**，见[注意事项](#注意事项)。
 
@@ -42,7 +47,7 @@ maftools 是普通的 Bioconductor 二进制包，因此 WES 流程无需源码�
 ## 为什么"localhost 优先"？
 
 真实的组学分析（Seurat/Bioconductor）需要原生计算和真实内存，纯浏览器（WASM）跑不动。
-所以 OMICstudio 采用**本地服务 + 浏览器界面**：界面是网页，但所有计算都在**你的机器**上完成。
+所以 OmicOne 采用**本地服务 + 浏览器界面**：界面是网页，但所有计算都在**你的机器**上完成。
 这和 `cellxgene launch` 是同一个模式。
 
 ---
@@ -54,8 +59,8 @@ maftools 是普通的 Bioconductor 二进制包，因此 WES 流程无需源码�
 ### A. 你已经装了 R（最轻）
 ```r
 # install.packages("remotes")
-remotes::install_github("Tianqi-Ma/OMICstudio")
-OMICstudio::run_app()   # 自动打开浏览器
+remotes::install_github("Tianqi-Ma/OmicOne")
+OmicOne::run_app()   # 自动打开浏览器
 ```
 需要 R ≥ 4.1，**shiny ≥ 1.7.4** 与 **bslib ≥ 0.7.0**（推荐 shiny ≥ 1.8.1），
 以及你实际要跑的那些步骤所需的重分析包。下载最小，一条命令。
@@ -64,8 +69,8 @@ OMICstudio::run_app()   # 自动打开浏览器
 R + Seurat + Bioconductor + scop + 应用**全部打进一个镜像**，你只需装
 [Docker](https://www.docker.com/products/docker-desktop/)。
 ```bash
-docker build -t omicstudio .           # 从本仓库构建一次
-docker run --rm -p 3838:3838 -m 16g omicstudio
+docker build -t omicone .           # 从本仓库构建一次
+docker run --rm -p 3838:3838 -m 16g omicone
 # 然后浏览器打开 http://localhost:3838
 ```
 数据通过**浏览器上传**（无需挂载目录）。给 Docker 足够内存（`-m 16g`，大数据还需在
@@ -164,7 +169,7 @@ Docker Desktop 里调高内存上限）。
 - **尚未端到端验证。** 所有文件都能解析、每个步骤的 UI 都能构建、每个模块的输出都能求值、
   包也能安装——但两条流程都**还没有用真实数据在装好各自引擎的环境里跑过**，
   首次实跑时预计还需核对若干 scop 与 maftools 函数的参数名；
-  `OMICstudio:::wes_missing_api()` 可检查你安装的 maftools 是否仍提供 WES 模块所调用的全部函数。
+  `OmicOne:::wes_missing_api()` 可检查你安装的 maftools 是否仍提供 WES 模块所调用的全部函数。
 - **`scop` 是单细胞流程的绘图与计算引擎**，它是一个 GitHub 包；如果你的机器禁止源码编译，
   请使用 Docker 镜像——镜像已内置 scop，并预先烤好了 Python 步骤（scVelo、PAGA、Palantir）
   所需的 conda 环境。

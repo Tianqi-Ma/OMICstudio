@@ -53,7 +53,7 @@ mod_cellcomm_ui <- function(id) {
                        choices = c("LIANA" = "liana", "CellChat" = "cellchat",
                                    "CellPhoneDB *" = "cellphonedb",
                                    "NicheNet *" = "nichenet")),
-    shiny::div(class = "omicstudio-note",
+    shiny::div(class = "omicone-note",
                i18n("* CellPhoneDB and NicheNet require extra setup (often a Python environment) and are not run in-app.",
                     "* CellPhoneDB 和 NicheNet 需要额外设置（通常是 Python 环境），不在应用内运行。")),
     run_button(ns("run"), "Infer communication", "推断通讯")
@@ -75,7 +75,7 @@ mod_cellcomm_server <- function(id, rv, log_rv) {
     output$group_ui <- shiny::renderUI({
       cols <- obj_meta_cols(rv$obj)
       if (length(cols) == 0) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Load and annotate a dataset to choose a group column.",
                                "加载并注释数据集以选择分组列。")))
       }
@@ -125,7 +125,7 @@ mod_cellcomm_server <- function(id, rv, log_rv) {
 
     output$summary <- shiny::renderUI({
       if (!isTRUE(res$done)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("Choose a group column and method, then click Infer communication.",
                                "选择分组列和方法，然后点击推断通讯。")))
       }
@@ -190,7 +190,7 @@ cellcomm_summary_plot <- function(result, method) {
                       y = "Source (sender) / 源细胞（发送方）",
                       title = "Ligand-receptor interactions / 配体-受体相互作用") +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
-        omicstudio_theme()
+        omicone_theme()
     )
   }
 

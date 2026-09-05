@@ -1,4 +1,4 @@
-#' Reusable server-side helpers for OMICstudio
+#' Reusable server-side helpers for OmicOne
 #'
 #' @name utils_server
 #' @keywords internal

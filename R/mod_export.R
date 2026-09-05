@@ -27,9 +27,9 @@ mod_export_ui <- function(id) {
             step in order -- you only need to set the input path where it says so.",
       zh = "选择 <b>RDS</b> 以便在 R/Seurat 中重新载入对象，或选择 <b>.h5ad</b> 用于 Python/Scanpy（尽力而为，需要 SeuratDisk）。该 R 脚本会按顺序列出每一步，你只需在提示处设置输入路径。"),
     example = list(
-      en = "Re-run with <code>source(\"omicstudio_analysis.R\")</code> after
+      en = "Re-run with <code>source(\"omicone_analysis.R\")</code> after
                editing the <code>input_path</code> line at the top.",
-      zh = "在编辑顶部的 <code>input_path</code> 行之后，使用 <code>source(\"omicstudio_analysis.R\")</code> 重新运行。")
+      zh = "在编辑顶部的 <code>input_path</code> 行之后，使用 <code>source(\"omicone_analysis.R\")</code> 重新运行。")
   )
   controls <- shiny::tagList(
     label_with_help("Object format",
@@ -68,7 +68,7 @@ mod_export_server <- function(id, rv, log_rv) {
     # Build the reproducibility R script text from the log entries.
     build_script <- function(entries) {
       header <- c(
-        "# OMICstudio reproducibility script",
+        "# OmicOne reproducibility script",
         paste0("# Generated: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
         "#",
         "# IMPORTANT: set the input path below to your own data before running.",
@@ -97,23 +97,23 @@ mod_export_server <- function(id, rv, log_rv) {
     output$summary <- shiny::renderUI({
       entries <- log_rv()
       if (is.null(entries) || !length(entries)) {
-        return(shiny::div(class = "omicstudio-placeholder",
+        return(shiny::div(class = "omicone-placeholder",
                           i18n("No steps recorded yet. Run some analysis steps first.",
                                "尚未记录任何步骤。请先运行一些分析步骤。")))
       }
       shiny::tagList(
         stat_tile(i18n("Steps performed", "已执行步骤数"), length(entries)),
-        shiny::tags$ol(class = "omicstudio-steps",
+        shiny::tags$ol(class = "omicone-steps",
           lapply(entries, function(e) {
             shiny::tags$li(shiny::tags$b(e$step),
-                           shiny::tags$span(class = "omicstudio-muted",
+                           shiny::tags$span(class = "omicone-muted",
                                             paste0("  (", e$time, ")")))
           }))
       )
     })
 
     output$preview <- shiny::renderUI({
-      shiny::div(class = "omicstudio-note",
+      shiny::div(class = "omicone-note",
                  i18n(paste0("No plot for this step. Use the buttons on the left to download ",
                              "your processed object and the reproducibility script. ",
                              "Remember to set input/output paths when you re-run the script."),
@@ -125,7 +125,7 @@ mod_export_server <- function(id, rv, log_rv) {
       filename = function() {
         fmt <- input$fmt %||% "rds"
         ext <- switch(fmt, rds = "rds", h5ad = "h5ad", figures = "txt")
-        paste0("omicstudio_object_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".", ext)
+        paste0("omicone_object_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".", ext)
       },
       content = function(file) {
         fmt <- input$fmt %||% "rds"
@@ -156,7 +156,7 @@ mod_export_server <- function(id, rv, log_rv) {
 
     output$download_script <- shiny::downloadHandler(
       filename = function()
-        paste0("omicstudio_analysis_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".R"),
+        paste0("omicone_analysis_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".R"),
       content = function(file) {
         writeLines(build_script(log_rv()), file)
         mark_done(rv, "export")

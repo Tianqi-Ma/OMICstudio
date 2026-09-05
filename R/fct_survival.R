@@ -314,7 +314,7 @@ km_plot <- function(fit, lr = NULL, title = "Overall survival",
     ggplot2::scale_colour_manual(values = sc_palette(length(groups)), name = NULL) +
     ggplot2::scale_y_continuous(limits = c(0, 1), labels = function(v) paste0(v * 100, "%")) +
     ggplot2::labs(x = time_label, y = "Survival probability", title = title) +
-    omicstudio_theme()
+    omicone_theme()
 
   if (nrow(cens)) {
     p <- p + ggplot2::geom_point(data = cens, shape = 3, size = 1.8,
